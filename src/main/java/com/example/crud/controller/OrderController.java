@@ -94,7 +94,7 @@ public class OrderController {
 
     @PostMapping(value = "userPage/orders")
     public ResponseEntity<Order> createOrder(@RequestBody String body,
-                                             HttpServletRequest request){
+                                             HttpServletRequest request) throws ParseException {
         if (jwtService.isCustomer(request)){
             User user= jwtService.getCurrentUser(request);
             JSONObject jsonObject= new JSONObject(body);
