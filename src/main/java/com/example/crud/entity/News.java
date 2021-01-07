@@ -28,17 +28,21 @@ public class News implements Serializable {
     @JoinColumn(name = "author_id", nullable = false)
     private User user;
 
+    @Column(name = "cover")
+    private String cover;
+
     public News(){
 
     }
 
 
-    public News(long newsId, @NotNull String title, @NotNull String content, long datePost, User user) {
+    public News(long newsId, @NotNull String title, @NotNull String content, long datePost, User user, String cover) {
         this.newsId = newsId;
         this.title = title;
         this.content = content;
         this.datePost = datePost;
         this.user= user;
+        this.cover= cover;
     }
 
     public long getNewsId() {
@@ -84,6 +88,14 @@ public class News implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 }
 

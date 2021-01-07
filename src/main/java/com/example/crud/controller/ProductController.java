@@ -162,7 +162,7 @@ public class ProductController {
                 productService.save(product);
             } catch (Exception e) {
                 logger.error(String.valueOf(e));
-                return new ResponseEntity("Kiểm tra thông tin đầu vào", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity("Không thể thêm sản phẩm này.", HttpStatus.BAD_REQUEST);
             }
             return new ResponseEntity<>(product, HttpStatus.CREATED);
         }
