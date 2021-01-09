@@ -33,7 +33,7 @@ CREATE TABLE `hibernate_sequence` (
 
 LOCK TABLES `hibernate_sequence` WRITE;
 /*!40000 ALTER TABLE `hibernate_sequence` DISABLE KEYS */;
-INSERT INTO `hibernate_sequence` VALUES (122);
+INSERT INTO `hibernate_sequence` VALUES (37);
 /*!40000 ALTER TABLE `hibernate_sequence` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -46,12 +46,9 @@ DROP TABLE IF EXISTS `tbl_address`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_address` (
   `address_id` bigint(20) NOT NULL,
-  `city` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `delivery` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `district` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `note` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `detail_address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `full_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `street` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `user_id` bigint(20) NOT NULL,
   PRIMARY KEY (`address_id`),
   KEY `FK2s8ssqc5b7xsvbaereac0daj` (`user_id`),
@@ -65,7 +62,7 @@ CREATE TABLE `tbl_address` (
 
 LOCK TABLES `tbl_address` WRITE;
 /*!40000 ALTER TABLE `tbl_address` DISABLE KEYS */;
-INSERT INTO `tbl_address` VALUES (30,'Hà Nội','J&T','Nam Từ Liem',NULL,'365934509','132 Phùng Khoang',3);
+INSERT INTO `tbl_address` VALUES (14,'123 O Cho Dua, Dong Da','Nguyen Ngoc Hung','864359340',5);
 /*!40000 ALTER TABLE `tbl_address` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -84,10 +81,10 @@ CREATE TABLE `tbl_feedback` (
   `product_id` bigint(20) NOT NULL,
   `user_id` bigint(20) NOT NULL,
   PRIMARY KEY (`feedback_id`),
-  KEY `FKeraommrt51jrh7xt8v07ev6ma` (`user_id`),
   KEY `FKir8tw33nbhi6vr8uqqbc73oed` (`product_id`),
+  KEY `FKeraommrt51jrh7xt8v07ev6ma` (`user_id`),
   CONSTRAINT `FKeraommrt51jrh7xt8v07ev6ma` FOREIGN KEY (`user_id`) REFERENCES `tblusers` (`user_id`),
-  CONSTRAINT `FKir8tw33nbhi6vr8uqqbc73oed` FOREIGN KEY (`product_id`) REFERENCES `tblproducts` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `FKir8tw33nbhi6vr8uqqbc73oed` FOREIGN KEY (`product_id`) REFERENCES `tblproducts` (`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -97,7 +94,31 @@ CREATE TABLE `tbl_feedback` (
 
 LOCK TABLES `tbl_feedback` WRITE;
 /*!40000 ALTER TABLE `tbl_feedback` DISABLE KEYS */;
+INSERT INTO `tbl_feedback` VALUES (22,'Hàng giao nhanh, sản phẩm như hình, giá cả phải chăng.','07/01/2021',5,4,5);
 /*!40000 ALTER TABLE `tbl_feedback` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_tag`
+--
+
+DROP TABLE IF EXISTS `tbl_tag`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_tag` (
+  `tag_id` bigint(20) NOT NULL,
+  `tag_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`tag_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_tag`
+--
+
+LOCK TABLES `tbl_tag` WRITE;
+/*!40000 ALTER TABLE `tbl_tag` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_tag` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -125,6 +146,7 @@ CREATE TABLE `tbl_user_voucher` (
 
 LOCK TABLES `tbl_user_voucher` WRITE;
 /*!40000 ALTER TABLE `tbl_user_voucher` DISABLE KEYS */;
+INSERT INTO `tbl_user_voucher` VALUES (21,5,18);
 /*!40000 ALTER TABLE `tbl_user_voucher` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -142,7 +164,7 @@ CREATE TABLE `tbl_vouchers` (
   `date_start` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `price_apply` double NOT NULL,
   `type_discount` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `value_discount` double DEFAULT NULL,
+  `value_discount` double NOT NULL,
   PRIMARY KEY (`voucher_id`),
   UNIQUE KEY `UK_1b0q0qy94klnpwhs70vc8w1js` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -154,7 +176,7 @@ CREATE TABLE `tbl_vouchers` (
 
 LOCK TABLES `tbl_vouchers` WRITE;
 /*!40000 ALTER TABLE `tbl_vouchers` DISABLE KEYS */;
-INSERT INTO `tbl_vouchers` VALUES (16,'TET2020','01/01/2021','20/12/2020',600000,'VALUE',200000),(41,'TET2021','02/01/2021','31/12/2020',500000,'percent',20);
+INSERT INTO `tbl_vouchers` VALUES (18,'TET2021','07/01/2021','20/12/2020',0,'VALUE',200000);
 /*!40000 ALTER TABLE `tbl_vouchers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -181,7 +203,7 @@ CREATE TABLE `tblcart` (
 
 LOCK TABLES `tblcart` WRITE;
 /*!40000 ALTER TABLE `tblcart` DISABLE KEYS */;
-INSERT INTO `tblcart` VALUES (2,0,1),(4,0,3);
+INSERT INTO `tblcart` VALUES (2,0,1),(6,0,5);
 /*!40000 ALTER TABLE `tblcart` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -197,11 +219,12 @@ CREATE TABLE `tblcart_items` (
   `quantity` int(11) NOT NULL,
   `cart_id` bigint(20) NOT NULL,
   `product_id` bigint(20) NOT NULL,
+  `value_line` double NOT NULL,
   PRIMARY KEY (`cart_item_id`),
   KEY `FKlq1ww0ybuv90i00iraicj1ylm` (`cart_id`),
   KEY `FKph3xbbqkxgggjp48is7mfgbli` (`product_id`),
   CONSTRAINT `FKlq1ww0ybuv90i00iraicj1ylm` FOREIGN KEY (`cart_id`) REFERENCES `tblcart` (`cart_id`),
-  CONSTRAINT `FKph3xbbqkxgggjp48is7mfgbli` FOREIGN KEY (`product_id`) REFERENCES `tblproducts` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `FKph3xbbqkxgggjp48is7mfgbli` FOREIGN KEY (`product_id`) REFERENCES `tblproducts` (`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -235,7 +258,7 @@ CREATE TABLE `tblcategories` (
 
 LOCK TABLES `tblcategories` WRITE;
 /*!40000 ALTER TABLE `tblcategories` DISABLE KEYS */;
-INSERT INTO `tblcategories` VALUES (5,'mô tả trị mụn','trị mụn'),(71,'mô tả sản phẩm trị sẹo rỗ','trị sẹo rỗ');
+INSERT INTO `tblcategories` VALUES (3,'Tẩy trang','Tẩy trang'),(25,'<p>Dưỡng tráng, nâng tông da&nbsp;</p>','Dưỡng trắng'),(26,'<p>Dưỡng da mặt&nbsp;</p>','Dưỡng da mặt');
 /*!40000 ALTER TABLE `tblcategories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -248,10 +271,11 @@ DROP TABLE IF EXISTS `tblnews`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tblnews` (
   `news_id` bigint(20) NOT NULL,
-  `content` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `content` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `date_post` bigint(20) DEFAULT NULL,
   `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `author_id` bigint(20) NOT NULL,
+  `cover` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`news_id`),
   KEY `FKessk6m9cgxq8ux1gmxraf7pd4` (`author_id`),
   CONSTRAINT `FKessk6m9cgxq8ux1gmxraf7pd4` FOREIGN KEY (`author_id`) REFERENCES `tblusers` (`user_id`)
@@ -276,19 +300,21 @@ DROP TABLE IF EXISTS `tblorder`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tblorder` (
   `order_id` bigint(20) NOT NULL,
+  `delivery` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `note` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `real_pay` double DEFAULT NULL,
   `status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `time` bigint(20) DEFAULT NULL,
   `total` double DEFAULT NULL,
-  `user_id` bigint(20) NOT NULL,
-  `delivery` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `address_id` bigint(20) NOT NULL,
-  `voucher` double DEFAULT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `voucher_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`order_id`),
-  KEY `FKbpiac7yqsspkd75my73ncsamr` (`user_id`),
   KEY `FK867p8674mw3oia47yvtp87sh5` (`address_id`),
+  KEY `FKbpiac7yqsspkd75my73ncsamr` (`user_id`),
+  KEY `FK8jh7djfx8n7oqa5617gmayhuc` (`voucher_id`),
   CONSTRAINT `FK867p8674mw3oia47yvtp87sh5` FOREIGN KEY (`address_id`) REFERENCES `tbl_address` (`address_id`),
+  CONSTRAINT `FK8jh7djfx8n7oqa5617gmayhuc` FOREIGN KEY (`voucher_id`) REFERENCES `tbl_vouchers` (`voucher_id`),
   CONSTRAINT `FKbpiac7yqsspkd75my73ncsamr` FOREIGN KEY (`user_id`) REFERENCES `tblusers` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -299,6 +325,7 @@ CREATE TABLE `tblorder` (
 
 LOCK TABLES `tblorder` WRITE;
 /*!40000 ALTER TABLE `tblorder` DISABLE KEYS */;
+INSERT INTO `tblorder` VALUES (16,'J&T','note',1000000,'processing',1610031211687,1000000,14,5,NULL),(19,'J&T','note',800000,'finished',1610031363455,1000000,14,5,18),(34,'Giao hàng tiết kiệm','Giao trong giờ hành chính ',79000,'processing',1610063861259,79000,14,5,NULL);
 /*!40000 ALTER TABLE `tblorder` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -318,7 +345,7 @@ CREATE TABLE `tblorder_line` (
   PRIMARY KEY (`order_line_id`),
   KEY `FKnovbwj5kt9twv4i4dwa4urgwb` (`order_id`),
   KEY `FKqmparuphwoqev9xgvpnan3le3` (`product_id`),
-  CONSTRAINT `FKnovbwj5kt9twv4i4dwa4urgwb` FOREIGN KEY (`order_id`) REFERENCES `tblorder` (`order_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FKnovbwj5kt9twv4i4dwa4urgwb` FOREIGN KEY (`order_id`) REFERENCES `tblorder` (`order_id`),
   CONSTRAINT `FKqmparuphwoqev9xgvpnan3le3` FOREIGN KEY (`product_id`) REFERENCES `tblproducts` (`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -329,6 +356,7 @@ CREATE TABLE `tblorder_line` (
 
 LOCK TABLES `tblorder_line` WRITE;
 /*!40000 ALTER TABLE `tblorder_line` DISABLE KEYS */;
+INSERT INTO `tblorder_line` VALUES (17,4,1000000,16,4),(20,4,1000000,19,4),(35,1,79000,34,28);
 /*!40000 ALTER TABLE `tblorder_line` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -346,12 +374,12 @@ CREATE TABLE `tblproducts` (
   `description` longtext COLLATE utf8mb4_unicode_ci,
   `image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `preview` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `preview` longtext COLLATE utf8mb4_unicode_ci,
   `price` double DEFAULT NULL,
   `cate_id` bigint(20) NOT NULL,
   PRIMARY KEY (`product_id`),
   KEY `FK3fcpn0dme6xxhmi34ygy0750p` (`cate_id`),
-  CONSTRAINT `FK3fcpn0dme6xxhmi34ygy0750p` FOREIGN KEY (`cate_id`) REFERENCES `tblcategories` (`cate_id`) ON UPDATE CASCADE
+  CONSTRAINT `FK3fcpn0dme6xxhmi34ygy0750p` FOREIGN KEY (`cate_id`) REFERENCES `tblcategories` (`cate_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -361,7 +389,7 @@ CREATE TABLE `tblproducts` (
 
 LOCK TABLES `tblproducts` WRITE;
 /*!40000 ALTER TABLE `tblproducts` DISABLE KEYS */;
-INSERT INTO `tblproducts` VALUES (115,_binary '',1609647214181,'mô tả ','http://localhost:8081Screenshot from 2020-12-28 23-31-29.png_1609647214207','test2','Loại bỏ mụn đầu đen, tế bào chết, giúp thông thoáng lỗ chân lông\nMặt nạ bong bóng thải độc da\nKiểm soát bã nhờn, thu nhỏ lỗ chân lông\nĐộ pH chuẩn, không gây khô da, phù hợp với mọi loại da\nDung tích : 120ml',200000,5),(116,_binary '',1609647782433,'mô tả ','http://localhost:8081/uploads/Screenshot from 2020-12-28 23-31-29.png_1609647782438','test2','Loại bỏ mụn đầu đen, tế bào chết, giúp thông thoáng lỗ chân lông\nMặt nạ bong bóng thải độc da\nKiểm soát bã nhờn, thu nhỏ lỗ chân lông\nĐộ pH chuẩn, không gây khô da, phù hợp với mọi loại da\nDung tích : 120ml',200000,5),(117,_binary '',1609647831531,'mô tả ','http://localhost:8081/uploads/Screenshot from 2020-12-28 23-31-29.png_1609647845680','test2','Loại bỏ mụn đầu đen, tế bào chết, giúp thông thoáng lỗ chân lông\nMặt nạ bong bóng thải độc da\nKiểm soát bã nhờn, thu nhỏ lỗ chân lông\nĐộ pH chuẩn, không gây khô da, phù hợp với mọi loại da\nDung tích : 120ml',200000,5),(118,_binary '',1609648016028,'mô tả ','http://localhost:8081/uploads/1609648018332.Screenshot from 2020-12-28 23-31-29.png','test2','Loại bỏ mụn đầu đen, tế bào chết, giúp thông thoáng lỗ chân lông\nMặt nạ bong bóng thải độc da\nKiểm soát bã nhờn, thu nhỏ lỗ chân lông\nĐộ pH chuẩn, không gây khô da, phù hợp với mọi loại da\nDung tích : 120ml',200000,5),(119,_binary '',1609649160809,'mô tả ','http://localhost:8081/uploads/1609649160809png','test2','Loại bỏ mụn đầu đen, tế bào chết, giúp thông thoáng lỗ chân lông\nMặt nạ bong bóng thải độc da\nKiểm soát bã nhờn, thu nhỏ lỗ chân lông\nĐộ pH chuẩn, không gây khô da, phù hợp với mọi loại da\nDung tích : 120ml',200000,5),(120,_binary '',1609649202175,'mô tả ','http://localhost:8081/uploads/1609649202175.png','test2','Loại bỏ mụn đầu đen, tế bào chết, giúp thông thoáng lỗ chân lông\nMặt nạ bong bóng thải độc da\nKiểm soát bã nhờn, thu nhỏ lỗ chân lông\nĐộ pH chuẩn, không gây khô da, phù hợp với mọi loại da\nDung tích : 120ml',200000,5),(121,_binary '',1609653418828,'mô tả ','/uploads/1609653418828.png','test2','Loại bỏ mụn đầu đen, tế bào chết, giúp thông thoáng lỗ chân lông\nMặt nạ bong bóng thải độc da\nKiểm soát bã nhờn, thu nhỏ lỗ chân lông\nĐộ pH chuẩn, không gây khô da, phù hợp với mọi loại da\nDung tích : 120ml',200000,5);
+INSERT INTO `tblproducts` VALUES (4,_binary '\0',1610024811313,'mô tả ','07012021200651.png','Fresh Calming Gel Cleanser','xem trước ',250000,3),(23,_binary '\0',1610032206291,'mô tả ','07012021221006.png','Perfect Makeup Cleansing Water','xem trước ',150000,3),(24,_binary '\0',1610032240033,'mô tả ','07012021221040.jpeg','Perfect Makeup Cleansing Water','xem trước ',100000,3),(27,_binary '',1610062580813,'<figure class=\"table\"><table><tbody><tr><td>Thương hiệu&nbsp;</td><td>LANEIGE</td></tr><tr><td>Dạng sản phẩm</td><td>Dạng kem&nbsp;</td></tr><tr><td>Dành cho loại da&nbsp;</td><td>Mọi loại da&nbsp;</td></tr></tbody></table></figure>','08012021063620.jpg','Kem dưỡng ẩm nâng tông da Laneige White Dew Tone-up Cream 50ml + Tặng 1 Innisfree Green Tea Mask Sheet','<p>Kem hiệu chỉnh tông màu da White Dew Tone-Up Cream (50ml) giúp làm mờ các đốm nâu sạm trên da với kết cấu giống dạng sữa dưỡng giàu độ ẩm</p>',900000,26),(28,_binary '',1610063171471,'<figure class=\"table\"><table><tbody><tr><td>Thương hiệu</td><td>Laneige</td></tr><tr><td>Xuất xứ thương hiệu</td><td>Hàn Quốc</td></tr><tr><td>Xuất xứ</td><td>Hàn Quốc</td></tr><tr><td>SKU</td><td>9994853862605</td></tr><tr><td>Dung tích</td><td>5ml</td></tr><tr><td>Loại da phù hợp</td><td>Tất cả các loại da</td></tr></tbody></table></figure><p>Dành cho mọi loại da<br>Tinh chất tăng cường độ ẩm giúp lớp make up rạng rỡ, căng khỏe, lâu trôi trong thời gian dài.<br>Thành phần dưỡng ẩm Ceramide cùng với thành phần thiên khoáng từ thiên nhiên giúp dưỡng ẩm da và cải thiện vấn đề da xỉn màu</p><ul><li>Tăng cường cải thiện độ ẩm, tăng khả năng bám dính bàm giúp lớp nền bền vững hơn.</li><li>Các hạt kim cương khoáng hồng giúp đạt được kết cấu da mịn màng, mang lại làn da sáng tự nhiên.</li><li>Cân bằng lượng dầu và nước giúp giữ ẩm cho da.</li><li>Kết cấu gel ẩm nhẹ và thoải mái cho da chăm sóc làn da ẩm và mềm mịn.</li></ul><p>Giá sản phẩm trên Tiki đã bao gồm thuế theo luật hiện hành. Tuy nhiên tuỳ vào từng loại sản phẩm hoặc phương thức, địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như phí vận chuyển, phụ phí hàng cồng kềnh, ...</p>','08012021064611.jpg','[Minisize 5ml] - Tinh Chất Dưỡng Da Trước Khi Make Up Giúp Lớp Nền Căng Khỏe Laneige Glowy Makeup Serum 5ml (Không có vỏ hộp)','<p>Tinh chất tăng cường độ ẩm giúp lớp make up rạng rỡ, căng khỏe, lâu trôi trong thời gian dài.<br>Thành phần dưỡng ẩm Ceramide cùng với thành phần thiên khoáng từ thiên nhiên giúp dưỡng ẩm da và cải thiện vấn đề da xỉn màu</p>',79000,25),(29,_binary '',1610063358078,'<p>Mô tả</p>','08012021064918.jpg','Korea LANEIGE Power Essential Skin Refiner Light 200ml','<p>Preview</p>',524000,25),(30,_binary '',1610063418533,'<figure class=\"table\"><table><tbody><tr><td>Thương hiệu</td><td>Laneige</td></tr><tr><td>Xuất xứ thương hiệu</td><td>Hàn Quốc</td></tr><tr><td>Xuất xứ</td><td>Hàn Quốc</td></tr><tr><td>SKU</td><td>8147666503291</td></tr></tbody></table></figure>','08012021065018.jpg','LANEIGE Water Bank Moisture Essence 70ml','<p>Preview</p>',792000,25),(31,_binary '',1610063485399,'<figure class=\"table\"><table><tbody><tr><td>Thương hiệu</td><td>Laneige</td></tr><tr><td>Xuất xứ thương hiệu</td><td>Hàn Quốc</td></tr><tr><td>Xuất xứ</td><td>Hàn Quốc</td></tr><tr><td>SKU</td><td>2165269345359</td></tr></tbody></table></figure>','08012021065125.jpg','Tinh Chất Dưỡng LANEIGE Clear C Advanced Effector EX 150ml','<p>Preview</p>',772000,25),(32,_binary '',1610063549512,'<figure class=\"table\"><table><tbody><tr><td>Thương hiệu</td><td>Laneige</td></tr><tr><td>SKU</td><td>7248065139270</td></tr></tbody></table></figure>','08012021065229.jpeg','Laneige White Dew Skin Refiner 120ml','<p>Preview</p>',693000,25),(36,_binary '',1610064266677,'<p>&lt;div&gt;Nước cân bằng da giúp dưỡng ẩm và giúp làm trắng da&lt;br&gt;<br>Thẩm thấu nhanh trên bề mặt da, không nhờn rít&lt;br&gt;<br>Bổ sung độ ẩm và giúp làm đều màu da&lt;p&gt;&lt;img src=\"https://salt.tikicdn.com/ts/tmp/86/37/88/c72e33282cda2aa8777ec33474e7b246.JPG\" alt=\"Laneige White Dew Skin Refiner 120ml\" width=\"750px\" height=\"1990px\"&gt;&lt;/p&gt;Nước cân bằng da Laneige White Dew Skin Refiner ứng dụng công nghệ Mela-vita Crusher &nbsp;của Laneige, Hàn Quốc mang đến hiệu quả vượt trội trong việc cải thiện các đốm nâu, vùng da không đều màu bằng cách khóa các cầu nối melanin, giúp làn da trắng sáng, rạng ngời tự nhiên. Kết cấu sản phẩm ở dạng lỏng nhẹ có thể biến đổi thành những giọt nước khi dàn trải trên da, từ đó gia tăng khả năng hấp thụ độ ẩm và da, giúp da êm dịu và tươi mát. Ngoài ra, ưu điểm vượt trội này cũng giúp cân bằng độ pH cho da, tạo nền tảng vững chắc để da hấp thụ dưỡng chất ở những bước chăm sóc tiếp theo tốt hơn.&lt;br&gt;<br>&lt;br&gt;<br>Bên cạnh đó, nước cân bằng da còn giúp lấy đi những tế bào chết còn sót lại trong da, làm lỗ chân lông se khít, cho da mịn màng, mềm mại. Bên cạnh đó, công nghệ Phyto Sugar Water của sản phẩm sẽ tạo ra áp lực thẩm thấu mạnh giúp cung cấp độ ẩm cho da từ lớp biểu bì đến hạ bì, khiến da luôn căng mướt, mềm mịn như lụa.&lt;br&gt;<br>&lt;br&gt;<br>Nước cân bằng da Laneige White Dew Skin Refiner còn được tạo nên từ những chiết xuất thiên nhiên dịu nhẹ. Trong đó, chiết xuất saururus (cây tam bạch thảo), thành phần được cấp bằng sáng chế của Laniege, với khả năng làm trắng da vượt trội từ sâu bên trong, làm giảm thâm nám, cải thiện làn da không đều màu. Kết hợp với khả năng cung cấp độ ẩm tuyệt vời từ chiết xuất nấm cục (truffle) và chống oxy hóa từ vitamin C, từ đó góp phần mang đến làn da mịn màng, trắng sáng và tràn đầy sức sống.&lt;p&gt;Giá sản phẩm trên Tiki đã bao gồm thuế theo luật hiện hành. Tuy nhiên tuỳ vào từng loại sản phẩm hoặc phương thức, địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như phí vận chuyển, phụ phí hàng cồng kềnh, ...&lt;/p&gt;&lt;/div&gt;</p>','08012021070426.jpeg','Test','<p>Xem trước&nbsp;</p>',79000,3);
 /*!40000 ALTER TABLE `tblproducts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -374,15 +402,15 @@ DROP TABLE IF EXISTS `tblusers`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tblusers` (
   `user_id` bigint(20) NOT NULL,
+  `avatar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `enable` bit(1) DEFAULT NULL,
   `full_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `last_active` bigint(20) NOT NULL,
   `pass_word` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `role` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `avatar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `enable` bit(1) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `UK_d2qpw421a06yryacegqhk91dx` (`user_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -394,33 +422,8 @@ CREATE TABLE `tblusers` (
 
 LOCK TABLES `tblusers` WRITE;
 /*!40000 ALTER TABLE `tblusers` DISABLE KEYS */;
-INSERT INTO `tblusers` VALUES (1,'young4everbts@gmail.com','Nguyễn Thu Huyền',1609424331806,'$2a$10$ji1z69vSJIbC6slclRJ7o.VU8JRaG7FxJNmf8.0eP08okMZytBmVC','30380598402','admin','huyenngtn',NULL,_binary ''),(3,'young4everbts@gmail.com','Nguyễn Quốc Bảo',1609424455762,'$2a$10$1a1drFlHo3b0bGDQcNDb1.ebx.RyVKE.S3fNOEPoRESSoUbqGOnJm','30380598402','user','baonq',NULL,_binary '');
+INSERT INTO `tblusers` VALUES (1,'avatardefault.png','young4everbts@gmail.com',_binary '','Nguyễn Thu Huyền',1610024181795,'$2a$10$.qi3n8MgN2JCE6Zwew3yF.9L6MUSte2galpmdlVLrmzF2P/SiSm92','30380598402','admin','huyenngtn'),(5,'avatardefault.png','young4everbts@gmail.com',_binary '','Nguyễn Ngọc Hưng',1610024857965,'$2a$10$XbDZU5xXBQPsY/y9x6Fgeubd4zVWYdPryL4Iuz6NyK.6AttqLslQC','30380598402','user','hungnne');
 /*!40000 ALTER TABLE `tblusers` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `test1`
---
-
-DROP TABLE IF EXISTS `test1`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `test1` (
-  `user_id` bigint(20) NOT NULL,
-  `avatar` varchar(255) DEFAULT NULL,
-  `user_name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `UK_ry7o8fwybuyfwrc535c6i15wk` (`user_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `test1`
---
-
-LOCK TABLES `test1` WRITE;
-/*!40000 ALTER TABLE `test1` DISABLE KEYS */;
-/*!40000 ALTER TABLE `test1` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -432,4 +435,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-01-03 16:05:09
+-- Dump completed on 2021-01-09  6:19:05
