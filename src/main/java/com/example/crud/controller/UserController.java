@@ -124,14 +124,14 @@ public class UserController {
 //        try{
         User user = userService.findByName(userName);
         if (user == null) {
-            return new ResponseEntity("Username is not exist", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("Tên đăng nhập không tồn tại.", HttpStatus.BAD_REQUEST);
         }
         String randomStr= userService.forgetPassword(user);
-        String message = "Confirm code of account "+ userName+ " is: " + randomStr;
+        String message = "Mã xác nhận của tài khoản #"+ userName+ " là: " + randomStr;
         if (!sendEmailService.resetPassword(message, user.getEmail())) {
-            return new ResponseEntity("Can't send reset password for you", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("Không thể gửi mã xác nhận đến tài khoản của bạn", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity("Confirm code sent to your email.", HttpStatus.OK);
+        return new ResponseEntity("Mã xác nhận đã được gửi tới email của bạn.", HttpStatus.OK);
     }
 
     @PostMapping(value = "/user/confirmPassword")

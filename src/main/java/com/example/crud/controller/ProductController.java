@@ -66,7 +66,7 @@ public class ProductController {
     }
 
     @GetMapping(value = "/products/bestSeller")
-    public ResponseEntity<Product> getListProductBestSeller(@RequestParam(required = false, defaultValue = "5") int limit) throws ParseException {
+    public ResponseEntity<Product> getListProductBestSeller() throws ParseException{
         Map<Long, Integer> result= orderService.getListProductBestSeller();
         Set<Map.Entry<Long, Integer>> entries= result.entrySet();
         Comparator<Map.Entry<Long, Integer>> comparator = new Comparator<Map.Entry<Long, Integer>>() {
@@ -89,7 +89,7 @@ public class ProductController {
             listProduct.add(mapping.getKey());
         }
         List<Product> productList= new ArrayList<>();
-        int target= limit< listProduct.size() ? limit: listProduct.size();
+        int target= 4< listProduct.size() ? 4: listProduct.size();
         for (int i=0; i< target; i++){
             productList.add(productService.findById(listProduct.get(i)));
         }
