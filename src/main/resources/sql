@@ -33,7 +33,7 @@ CREATE TABLE `hibernate_sequence` (
 
 LOCK TABLES `hibernate_sequence` WRITE;
 /*!40000 ALTER TABLE `hibernate_sequence` DISABLE KEYS */;
-INSERT INTO `hibernate_sequence` VALUES (44);
+INSERT INTO `hibernate_sequence` VALUES (61);
 /*!40000 ALTER TABLE `hibernate_sequence` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -146,6 +146,7 @@ CREATE TABLE `tbl_tag` (
 
 LOCK TABLES `tbl_tag` WRITE;
 /*!40000 ALTER TABLE `tbl_tag` DISABLE KEYS */;
+INSERT INTO `tbl_tag` VALUES (45,'dưỡng trắng'),(46,'dưỡng thể');
 /*!40000 ALTER TABLE `tbl_tag` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -204,7 +205,7 @@ CREATE TABLE `tbl_vouchers` (
 
 LOCK TABLES `tbl_vouchers` WRITE;
 /*!40000 ALTER TABLE `tbl_vouchers` DISABLE KEYS */;
-INSERT INTO `tbl_vouchers` VALUES (18,'TET2021','07/01/2021','20/12/2020',0,'VALUE',200000);
+INSERT INTO `tbl_vouchers` VALUES (18,'TET2020','09/01/2021','20/12/2020',200000,'VALUE',200000);
 /*!40000 ALTER TABLE `tbl_vouchers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -231,7 +232,7 @@ CREATE TABLE `tblcart` (
 
 LOCK TABLES `tblcart` WRITE;
 /*!40000 ALTER TABLE `tblcart` DISABLE KEYS */;
-INSERT INTO `tblcart` VALUES (6,237000,5),(43,0,42);
+INSERT INTO `tblcart` VALUES (6,158000,5),(43,0,42);
 /*!40000 ALTER TABLE `tblcart` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -262,6 +263,7 @@ CREATE TABLE `tblcart_items` (
 
 LOCK TABLES `tblcart_items` WRITE;
 /*!40000 ALTER TABLE `tblcart_items` DISABLE KEYS */;
+INSERT INTO `tblcart_items` VALUES (52,2,6,36,158000);
 /*!40000 ALTER TABLE `tblcart_items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -286,7 +288,7 @@ CREATE TABLE `tblcategories` (
 
 LOCK TABLES `tblcategories` WRITE;
 /*!40000 ALTER TABLE `tblcategories` DISABLE KEYS */;
-INSERT INTO `tblcategories` VALUES (3,'Tẩy trang','Tẩy trang'),(25,'<p>Dưỡng tráng, nâng tông da&nbsp;</p>','Dưỡng trắng'),(26,'<p>Dưỡng da mặt&nbsp;</p>','Dưỡng da mặt');
+INSERT INTO `tblcategories` VALUES (3,'Tẩy trang','Tẩy trang'),(25,'<p>Dưỡng tráng, nâng tông da&nbsp;</p>','Dưỡng trắng'),(26,'<p>Dưỡng da mặt&nbsp;</p>','Dưỡng da mặt'),(53,'Nước hoa hồng','Nước hoa hồng'),(54,'Sữa dưỡng','Sữa dưỡng'),(55,'Tinh chất dưỡng','Tinh chất dưỡng'),(56,'Kem dưỡng da','Kem dưỡng da'),(57,'Mặt nạ','Mặt nạ'),(58,'Chăm sóc môi','Chăm sóc môi'),(59,'Chống nắng','Chống nắng'),(60,'Chăm sóc đặc biệt','Chăm sóc đặc biệt');
 /*!40000 ALTER TABLE `tblcategories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -463,4 +465,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-01-10 10:41:46
+-- Dump completed on 2021-01-10 17:12:06
