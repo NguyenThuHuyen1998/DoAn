@@ -160,7 +160,7 @@ public class OrderController {
     }
 
 
-    @GetMapping(value = "/userPage/voucher")
+    @PostMapping(value = "/userPage/voucher")
     public ResponseEntity<Voucher> applyVoucher(@RequestBody String data,
                                              HttpServletRequest request) throws ParseException {
         if (jwtService.isCustomer(request)) {

@@ -6,6 +6,7 @@ import com.example.crud.entity.OrderLine;
 import com.example.crud.entity.Product;
 import com.example.crud.helper.TimeHelper;
 import com.example.crud.repository.ProductRepository;
+import com.example.crud.response.ReportProduct;
 import com.example.crud.response.ReportProductResponse;
 import com.example.crud.predicate.PredicateOrderFilter;
 import com.example.crud.repository.OrderLineRepository;
@@ -27,7 +28,8 @@ public class ReportServiceImpl implements ReportService {
     private OrderLineRepository orderLineRepository;
     private ProductRepository productRepository;
     private Map<String, Object> reportRevenue;
-    private Map<String, Long> reportProduct;
+//    private Map<String, Object> reportProduct;
+//    private ReportProduct reportProduct;
     private Map<String, Object> report;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     TimeHelper timeHelper= new TimeHelper();
@@ -59,67 +61,45 @@ public class ReportServiceImpl implements ReportService {
         return report;
     }
 
-    public Map<String, Long> getReportByDay() throws ParseException {
+    public ReportProduct getReportByDay() throws ParseException {
         String start= LocalDate.now().format(formatter);
         String end= LocalDate.now().format(formatter);
         List<Order> orderList= filterOrder(start, end);
-        Map<String, Long> reportToday= getReportProduct(orderList);
-        long count= 0;
-        for(Map.Entry<String, Long> entry : reportToday.entrySet()) {
-            if(entry.getKey().equals("total")) continue;
-            count= count+ entry.getValue();
-        }
-        reportToday.put("totalCount", count);
+        ReportProduct reportToday= getReportProduct(orderList);
         return reportToday;
     }
 
-    public Map<String, Long> getReportByWeek() throws ParseException {
+    public ReportProduct getReportByWeek() throws ParseException {
         String start= timeHelper.getFirstDayInWeek();
         String end= timeHelper.getLastDayInWeek();
         List<Order> orderList= filterOrder(start, end);
-        Map<String, Long> reportThisWeek= getReportProduct(orderList);
-        long count= 0;
-        for(Map.Entry<String, Long> entry : reportThisWeek.entrySet()) {
-            if(entry.getKey().equals("total")) continue;
-            count= count+ entry.getValue();
-        }
-        reportThisWeek.put("totalCount", count);
+        ReportProduct reportThisWeek= getReportProduct(orderList);
         return reportThisWeek;
     }
 
-    public Map<String, Long> getReportByMonth() throws ParseException {
+    public ReportProduct getReportByMonth() throws ParseException {
         String start= timeHelper.getFirstInMonth();
         String end= timeHelper.getLastDayInMonth();
         List<Order> orderList= filterOrder(start, end);
-        Map<String, Long> reportThisMonth= getReportProduct(orderList);
-        long count= 0;
-        for(Map.Entry<String, Long> entry : reportThisMonth.entrySet()) {
-            if(entry.getKey().equals("total")) continue;
-            count= count+ entry.getValue();
-        }
-        reportThisMonth.put("totalCount", count);
+        ReportProduct reportThisMonth= getReportProduct(orderList);
         return reportThisMonth;
     }
 
-    public Map<String, Long> getReportByYear() throws ParseException {
+    public ReportProduct getReportByYear() throws ParseException {
         String start= timeHelper.getFirstDayOfYear();
         String end= timeHelper.getLastDayOfYear();
         List<Order> orderList= filterOrder(start, end);
-        Map<String, Long> reportThisYear= getReportProduct(orderList);
-        long count= 0;
-        for(Map.Entry<String, Long> entry : reportThisYear.entrySet()) {
-            if(entry.getKey().equals("total")) continue;
-            count= count+ entry.getValue();
-        }
-        reportThisYear.put("totalCount", count);
+        ReportProduct reportThisYear= getReportProduct(orderList);
         return reportThisYear;
     }
 
 
-    public Map<String, Long> getReportProduct(List<Order> orders){
+    public ReportProduct getReportProduct(List<Order> orders){
         try{
-            reportProduct= new HashMap<>();
+            ReportProduct reportProduct= new ReportProduct();
+            Map<String, Object> products= new HashMap<>();
             double totalRevenue= 0;
+            long totalCount= 0;
             if(orders.size()>0){
                 for(Order order: orders){
                     if (order.getStatus().equals(InputParam.PROCESSING) ) continue;
@@ -127,18 +107,25 @@ public class ReportServiceImpl implements ReportService {
                     for (OrderLine orderLine: orderLines){
                         long productId= orderLine.getProduct().getId();
                         String productName= productRepository.findById(productId).get().getName();
-                        if(reportProduct.containsKey(productId)){
-                            long count= reportProduct.get(productId);
-                            reportProduct.put(productName, count+orderLine.getAmount());
+                        if(products.get(productId)!=null){
+                            long count= (long) products.get(String.valueOf(productId));
+                            products.put(productName, count+orderLine.getAmount());
                         }
                         else {
-                            reportProduct.put(productName, Long.valueOf(orderLine.getAmount()));
+                            products.put(productName, Long.valueOf(orderLine.getAmount()));
                         }
                     }
+                    reportProduct.setProducts(products);
                     totalRevenue= totalRevenue+ order.getRealPay();
                 }
             }
-            reportProduct.put("total", (long) totalRevenue);
+            if (products!= null){
+                for(Map.Entry<String, Object> entry : products.entrySet()) {
+                    totalCount= totalCount+ (long)entry.getValue();
+                }
+            }
+            reportProduct.setTotalCount(totalCount);
+            reportProduct.setTotal(totalRevenue);
             return reportProduct;
         }
         catch (Exception e){

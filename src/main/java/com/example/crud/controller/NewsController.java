@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -55,30 +56,32 @@ public class NewsController {
     }
 
     @PostMapping(value = "adminPage/news")
-    public ResponseEntity<News> postNews(@RequestParam("cover") MultipartFile cover,
-                                         @RequestBody String dataTag,
+    public ResponseEntity<News> postNews(@RequestParam(name = "cover") MultipartFile cover,
+                                         @RequestParam(name = "tags") String dataTag,
+                                         @RequestParam(name = "content") String content,
+                                         @RequestParam(name = "title") String title,
                                          HttpServletRequest request) {
         if (jwtService.isAdmin(request)) {
             User user = jwtService.getCurrentUser(request);
             News news = new News();
             news.setUser(user);
             JSONObject jsonObject= new JSONObject(dataTag);
-            news.setContent(jsonObject.getString("content"));
-            news.setTitle(jsonObject.getString("title"));
-            String fileName = storageService.save(cover);
-            news.setCover(fileName);
-            news.setDatePost(new Date().getTime());
-            newsService.saveNews(news);
+            JSONArray jsonArray= jsonObject.getJSONArray("tags");
             List<Tag> tagList=  new ArrayList<>();
-            JSONArray array= new JSONObject(dataTag).getJSONArray("tags");
-
-            for (int i=0; i< array.length(); i++){
-                Tag tag= tagService.getTagByName((String) array.get(i));
+            for (int i=0; i< jsonArray.length(); i++){
+                Tag tag= tagService.getTagByName((String) jsonArray.get(i));
                 if (tag!= null){
                     tagList.add(tag);
                 }
                 else return new ResponseEntity(new MessageResponse().getResponse("Tag không tồn tại."), HttpStatus.BAD_REQUEST);
             }
+            news.setContent(content);
+            news.setTitle(title);
+            String fileName = storageService.save(cover);
+            news.setCover(fileName);
+            news.setDatePost(new Date().getTime());
+            newsService.saveNews(news);
+
             if (tagList.size()>0){
                 for (Tag tag: tagList){
                     PostTag postTag= new PostTag(tag, news);

@@ -52,5 +52,6 @@ public class InputParam {
     public static final String OPTION= "option";
     public static final String PERCENT= "percent";
     public static final String VALUE= "value";
+    public static final String PRODUCTS= "products";
 
 }
