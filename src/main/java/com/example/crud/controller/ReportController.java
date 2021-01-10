@@ -5,6 +5,7 @@ import com.example.crud.entity.Order;
 import com.example.crud.entity.OrderLine;
 import com.example.crud.helper.TimeHelper;
 import com.example.crud.service.*;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,7 +53,7 @@ public class ReportController {
                     return new ResponseEntity(orderList, HttpStatus.OK);
             }
             catch (Exception e){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity(new JSONObject("Không thể xem báo cáo thống kê."),HttpStatus.BAD_REQUEST);
             }
         }
 

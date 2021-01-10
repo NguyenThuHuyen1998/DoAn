@@ -2,6 +2,7 @@ package com.example.crud.controller;
 
 import com.example.crud.entity.Voucher;
 import com.example.crud.helper.TimeHelper;
+import com.example.crud.response.MessageResponse;
 import com.example.crud.service.JwtService;
 import com.example.crud.service.VoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class VoucherController {
             }
             return new ResponseEntity(voucherList, HttpStatus.OK);
         }
-        return new ResponseEntity("Bạn không phải là admin", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải là admin"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @PostMapping(value = "/adminPage/vouchers")
@@ -47,7 +48,7 @@ public class VoucherController {
             String dateEnd= voucher.getDateEnd();
             List<Voucher> voucherList= voucherService.getListVoucher();
             for (Voucher index: voucherList){
-                if (index.getCode().equals(voucher.getCode())) return new ResponseEntity("Mã giảm giá đã tồn tại", HttpStatus.BAD_REQUEST);
+                if (index.getCode().equals(voucher.getCode())) return new ResponseEntity(new MessageResponse().getResponse("Mã giảm giá đã tồn tại"), HttpStatus.BAD_REQUEST);
             }
             long start= TimeHelper.getInstance().convertTimestamp(dateStart + " 00:00:00");
             long end= TimeHelper.getInstance().convertTimestamp(dateEnd+" 23:59:59");

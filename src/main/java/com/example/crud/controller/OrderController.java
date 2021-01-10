@@ -127,6 +127,8 @@ public class OrderController {
             Map<String, Integer> hashMap= toMap(jsonProduct);
 
             OrderResponse orderResponse= orderService.createOrder(user, note, delivery, voucher, address, hashMap);
+            user.setLastActive(new Date().getTime());
+            userService.add(user);
             return new ResponseEntity(orderResponse, HttpStatus.OK);
         }
         return new ResponseEntity("Đăng nhập trước khi thực hiện", HttpStatus.METHOD_NOT_ALLOWED);
@@ -158,7 +160,7 @@ public class OrderController {
 
 
     @GetMapping(value = "/userPage/voucher")
-    public ResponseEntity<OrderResponse> applyVoucher(@RequestBody String data,
+    public ResponseEntity<Voucher> applyVoucher(@RequestBody String data,
                                              HttpServletRequest request) throws ParseException {
         if (jwtService.isCustomer(request)) {
             User user= jwtService.getCurrentUser(request);
@@ -183,7 +185,7 @@ public class OrderController {
             if (orderResponse== null){
                 return new ResponseEntity("Mã giảm giá áp dụng cho đơn từ "+ voucher.getPriceApply(), HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>(orderResponse, HttpStatus.OK);
+            return new ResponseEntity(voucher, HttpStatus.OK);
         }
         return new ResponseEntity("Đăng nhập trước khi thực hiện", HttpStatus.METHOD_NOT_ALLOWED);
     }

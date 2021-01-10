@@ -4,6 +4,7 @@ import com.example.crud.constants.InputParam;
 import com.example.crud.entity.*;
 import com.example.crud.helper.TimeHelper;
 import com.example.crud.service.*;
+import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,17 +34,17 @@ public class FeedbackController {
             //check validator + permission
             Product product = feedBack.getProduct();
             if (product == null) {
-                return new ResponseEntity("Sán phẩm không tồn tại!", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity(new JSONObject("Sán phẩm không tồn tại!"), HttpStatus.BAD_REQUEST);
             }
             List<Long> getlistProductBought = orderService.getlistProductBought(userId);
             if (!getlistProductBought.contains(product.getId())) {
-                return new ResponseEntity("Bạn chưa mua sản phẩm này!", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity(new JSONObject("Bạn chưa mua sản phẩm này!"), HttpStatus.BAD_REQUEST);
             }
             feedBack.setDatePost(TimeHelper.getInstance().getNow());
             feedbackService.save(feedBack);
             return new ResponseEntity<>(feedBack, HttpStatus.OK);
         }
-        return new ResponseEntity("Đăng nhập trước khi thực hiện", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new JSONObject("Đăng nhập trước khi thực hiện"), HttpStatus.METHOD_NOT_ALLOWED);
 
     }
 

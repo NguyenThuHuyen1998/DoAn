@@ -4,6 +4,7 @@ import com.example.crud.constants.InputParam;
 import com.example.crud.entity.Cart;
 import com.example.crud.entity.CartItem;
 import com.example.crud.entity.Product;
+import com.example.crud.response.MessageResponse;
 import com.example.crud.service.*;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -56,7 +57,7 @@ public class CartItemController {
                     cartItemService.deleteCartItem(cartItemTarget);
                     cart.setTotalMoney(cart.getTotalMoney()- cartItemTarget.getValueLine());
                     cartService.save(cart);
-                    return new ResponseEntity("Đã xóa sản phẩm khỏi giỏ hàng", HttpStatus.OK);
+                    return new ResponseEntity(new MessageResponse().getResponse("Đã xóa sản phẩm khỏi giỏ hàng"), HttpStatus.OK);
                 }
                 if(cartItemTarget!= null){
                     cartItemTarget.setQuantity(cartItemTarget.getQuantity() + quantity);
@@ -69,7 +70,7 @@ public class CartItemController {
                 cartService.save(cart);
                 return new ResponseEntity(cartItemTarget, HttpStatus.OK);
             }
-            return new ResponseEntity("Đăng nhập trước khi thực hiện", HttpStatus.METHOD_NOT_ALLOWED);
+            return new ResponseEntity(new MessageResponse().getResponse("Đăng nhập trước khi thực hiện"), HttpStatus.METHOD_NOT_ALLOWED);
         }
         catch(Exception e){
             logger.error(String.valueOf(e));
@@ -106,13 +107,13 @@ public class CartItemController {
                             cart.setTotalMoney(cart.getTotalMoney()- index.getProduct().getPrice()*oldQuantity);
                             cartItemService.deleteCartItem(cartItem);
                         }
-                        return new ResponseEntity("Cập nhật giỏ hàng thành công!",HttpStatus.OK);
+                        return new ResponseEntity(new MessageResponse().getResponse("Cập nhật giỏ hàng thành công!"),HttpStatus.OK);
                     }
                 }
                 cartItemService.save(cartItem);
                 return new ResponseEntity<>(cartItem, HttpStatus.OK);
             }
-            return new ResponseEntity("Đăng nhập trước khi thực hiện", HttpStatus.METHOD_NOT_ALLOWED);
+            return new ResponseEntity(new MessageResponse().getResponse("Đăng nhập trước khi thực hiện"), HttpStatus.METHOD_NOT_ALLOWED);
         }
         catch (Exception e){
             logger.error(String.valueOf(e));
@@ -140,7 +141,7 @@ public class CartItemController {
                 }
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-            return new ResponseEntity("Đăng nhập trước khi thực hiện", HttpStatus.METHOD_NOT_ALLOWED);
+            return new ResponseEntity(new MessageResponse().getResponse("Đăng nhập trước khi thực hiện"), HttpStatus.METHOD_NOT_ALLOWED);
         }
         catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

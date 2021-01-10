@@ -28,6 +28,7 @@ public class News implements Serializable {
     @JoinColumn(name = "author_id", nullable = false)
     private User user;
 
+
     @Column(name = "cover")
     private String cover;
 

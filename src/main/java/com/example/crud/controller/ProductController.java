@@ -3,6 +3,7 @@ package com.example.crud.controller;
 import com.example.crud.constants.InputParam;
 import com.example.crud.entity.Category;
 import com.example.crud.entity.Product;
+import com.example.crud.response.MessageResponse;
 import com.example.crud.service.*;
 import org.apache.commons.collections4.ListUtils;
 import org.slf4j.Logger;
@@ -101,7 +102,7 @@ public class ProductController {
     public ResponseEntity<Product> getRelateProduct(@PathVariable("product-id") long productId) {
         Product product= productService.findById(productId);
         if (product== null) {
-            return new ResponseEntity("Sản phẩm không tồn tại.", HttpStatus.OK);
+            return new ResponseEntity(new MessageResponse().getResponse("Sản phẩm không tồn tại."), HttpStatus.OK);
         }
         long categoryId= product.getCategory().getId();
         List<Product> listProductByCategory= productService.findByCategoryID(categoryId);
@@ -120,7 +121,7 @@ public class ProductController {
         try{
             Product currentProduct = productService.findById(productId);
             if(!currentProduct.isActive()) {
-                return new ResponseEntity("Sản phẩm đã ngừng bán, vui lòng chọn sản phẩm khác!", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity(new MessageResponse().getResponse("Sản phẩm đã ngừng bán, vui lòng chọn sản phẩm khác!"), HttpStatus.BAD_REQUEST);
             }
             return new ResponseEntity(currentProduct, HttpStatus.OK);
         }
@@ -148,7 +149,7 @@ public class ProductController {
             try {
                 Category category = categoryService.findById(categoryId);
                 if (category== null){
-                    return new ResponseEntity("Danh mục không tồn tại", HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity(new MessageResponse().getResponse("Danh mục không tồn tại"), HttpStatus.BAD_REQUEST);
                 }
                 product.setCategory(category);
                 product.setName(name);
@@ -162,7 +163,7 @@ public class ProductController {
                 productService.save(product);
             } catch (Exception e) {
                 logger.error(String.valueOf(e));
-                return new ResponseEntity("Không thể thêm sản phẩm này.", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity(new MessageResponse().getResponse("Không thể thêm sản phẩm này."), HttpStatus.BAD_REQUEST);
             }
             return new ResponseEntity<>(product, HttpStatus.CREATED);
         }

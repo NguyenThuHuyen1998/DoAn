@@ -1,8 +1,10 @@
 package com.example.crud.controller;
 
 import com.example.crud.input.ContactForm;
+import com.example.crud.response.MessageResponse;
 import com.example.crud.service.SendEmailService;
 import org.apache.commons.mail.EmailException;
+import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +30,7 @@ public class ContactController {
         sb.append("Content: " + contactForm.getContent());
 
         if (emailService.contactToAdmin(sb.toString())) {
-            return new ResponseEntity<>("Hãy để ý email của bạn, admin sẽ phản hổi trong vòng 1 ngày", HttpStatus.OK);
+            return new ResponseEntity(new MessageResponse().getResponse("Hãy để ý email của bạn, admin sẽ phản hổi trong vòng 1 ngày"), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }

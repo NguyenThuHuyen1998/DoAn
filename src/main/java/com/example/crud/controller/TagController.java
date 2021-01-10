@@ -1,6 +1,7 @@
 package com.example.crud.controller;
 
 import com.example.crud.entity.Tag;
+import com.example.crud.response.MessageResponse;
 import com.example.crud.service.JwtService;
 import com.example.crud.service.TagService;
 import org.json.JSONObject;
@@ -35,22 +36,20 @@ public class TagController {
             List<Tag> tagList= tagService.getListTags();
             for(Tag tag: tagList){
                 if(tag.getTagName().equals(tagname)){
-                    return new ResponseEntity("Tagname này đã tồn tại", HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity(new MessageResponse().getResponse("Tag này đã tồn tại"), HttpStatus.BAD_REQUEST);
                 }
             }
-            Tag tag= new Tag(tagname);
-            tagService.save(tag);
+            tagService.save(tagname);
         }
-        return new ResponseEntity("Bạn không phải là admin", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải là admin"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @GetMapping(value = "tags")
-    public ResponseEntity<Tag> getlistTag(@RequestBody String data){
-            String tagname= new JSONObject(data).getString("tagName");
+    public ResponseEntity<Tag> getlistTag(){
             List<Tag> tagList= tagService.getListTags();
             if (tagList!= null || tagList.size()> 0){
                 return new ResponseEntity(tagList, HttpStatus.OK);
             }
-            return new ResponseEntity("Chưa có tag nào.", HttpStatus.NO_CONTENT);
+            return new ResponseEntity(new JSONObject("Chưa có tag nào."), HttpStatus.NO_CONTENT);
     }
 }

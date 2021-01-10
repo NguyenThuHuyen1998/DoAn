@@ -7,10 +7,12 @@ import com.example.crud.entity.CustomUserDetails;
 import com.example.crud.entity.User;
 import com.example.crud.input.JwtRequest;
 import com.example.crud.output.JwtResponse;
+import com.example.crud.response.MessageResponse;
 import com.example.crud.service.CartService;
 import com.example.crud.service.JwtService;
 import com.example.crud.service.UserService;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +64,9 @@ public class JwtAuthenticationController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 
-        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+        if (!authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword())){
+            return new ResponseEntity(new MessageResponse().getResponse("Đăng nhập không đúng tài khoản hoặc sai mật khẩu."), HttpStatus.BAD_REQUEST);
+        }
 
         final UserDetails userDetails = userDetailsService
                 .loadUserByUsername(authenticationRequest.getUsername());
@@ -74,7 +78,7 @@ public class JwtAuthenticationController {
     public ResponseEntity<User> saveUser(@RequestBody User user) throws Exception {
         User currentUser = userService.findByName(user.getUserName());
         if (currentUser != null) {
-            return new ResponseEntity("Username đã tồn tại", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new JSONObject("Username đã tồn tại"), HttpStatus.BAD_REQUEST);
         }
         String email = user.getEmail();
         if (!EmailValidator.getInstance().isValid(email)) {
@@ -105,13 +109,18 @@ public class JwtAuthenticationController {
 
     }
 
-    private void authenticate(String username, String password) throws Exception {
+    private boolean authenticate(String username, String password) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        } catch (DisabledException e) {
-            throw new Exception("USER_DISABLED", e);
-        } catch (BadCredentialsException e) {
-            throw new Exception("INVALID_CREDENTIALS", e);
+            return true;
+//        } catch (DisabledException e) {
+//            throw new Exception("USER_DISABLED", e);
+//        } catch (BadCredentialsException e) {
+//            throw new Exception("INVALID_CREDENTIALS", e);
+//        }
+        }
+        catch (Exception e){
+            return false;
         }
     }
 }
