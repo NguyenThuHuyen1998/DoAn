@@ -52,11 +52,11 @@ public class NewsController {
         return new ResponseEntity(new MessageResponse(" Chưa có bài viết nào."), HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping(value = "/news")
+    @PostMapping(value = "adminPage/news")
     public ResponseEntity<News> postNews(@RequestParam("title") String title,
                                          @RequestParam("content") String content,
                                          @RequestParam("cover") MultipartFile cover,
-                                         @RequestParam(value = "tags", required = false) String[] tagNames,
+                                         @RequestParam(value = "tags", required = false) String[] tags,
                                          HttpServletRequest request) {
         if (jwtService.isAdmin(request)) {
             User user = jwtService.getCurrentUser(request);
@@ -69,7 +69,7 @@ public class NewsController {
             news.setDatePost(new Date().getTime());
             newsService.saveNews(news);
             List<Tag> tagList=  new ArrayList<>();
-            for (String tagName: tagNames){
+            for (String tagName: tags){
                 Tag tag= tagService.getTagByName(tagName);
                 if (tag!= null){
                     tagList.add(tag);

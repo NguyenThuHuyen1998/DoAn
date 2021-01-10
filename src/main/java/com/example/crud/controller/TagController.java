@@ -40,6 +40,7 @@ public class TagController {
                 }
             }
             tagService.save(tagname);
+            return new ResponseEntity(new MessageResponse().getResponse("Tạo tag thành công."), HttpStatus.OK);
         }
         return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải là admin"), HttpStatus.METHOD_NOT_ALLOWED);
     }

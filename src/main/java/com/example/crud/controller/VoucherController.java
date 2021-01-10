@@ -97,7 +97,7 @@ public class VoucherController {
                 voucherService.addVoucher(voucher);
                 return new ResponseEntity(new MessageResponse().getResponse("Cập nhật mã giảm giá thành công!"), HttpStatus.OK);
             }
-            return new ResponseEntity(new MessageResponse().getResponse("Voucher không tồn tại!"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new MessageResponse().getResponse("Thông tin đầu vào không đúng!"), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải là admin"), HttpStatus.METHOD_NOT_ALLOWED);
     }
