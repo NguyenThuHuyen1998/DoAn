@@ -34,6 +34,10 @@ public class FeedBack implements Serializable {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(name = "image", nullable = false)
+    private String image;
+
+
     public FeedBack() {
     }
 
@@ -43,6 +47,16 @@ public class FeedBack implements Serializable {
         this.product = product;
         this.datePost= datePost;
         this.user= user;
+    }
+
+
+    public FeedBack(String content, int star, Product product, String datePost, User user, String image) {
+        this.content = content;
+        this.star= star;
+        this.product = product;
+        this.datePost= datePost;
+        this.user= user;
+        this.image= image;
     }
 
     public int getStar() {
@@ -91,5 +105,13 @@ public class FeedBack implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

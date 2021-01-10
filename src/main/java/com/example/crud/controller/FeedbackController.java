@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -20,28 +21,44 @@ public class FeedbackController {
 
     private OrderService orderService;
     private JwtService jwtService;
+    private ProductService productService;
     private FeedbackService feedbackService;
+    private FilesStorageService filesStorageService;
 
-    public FeedbackController(JwtService jwtService, OrderService orderService, FeedbackService feedbackService) {
+    public FeedbackController(JwtService jwtService, OrderService orderService, FeedbackService feedbackService, ProductService productService, FilesStorageService filesStorageService) {
         this.feedbackService= feedbackService;
         this.orderService = orderService;
         this.jwtService = jwtService;
+        this.productService= productService;
+        this.filesStorageService= filesStorageService;
     }
 
     @PostMapping(value = "/userPage/feedbacks")
-    public ResponseEntity<FeedBack> createFeedback(@RequestBody FeedBack feedBack, HttpServletRequest request) {
+    public ResponseEntity<FeedBack> createFeedback(@RequestParam("content") String content,
+                                                   @RequestParam("productId") long productId,
+                                                   @RequestParam("star") int star,
+                                                   @RequestParam(value = "image", required = false, defaultValue = "") MultipartFile image,
+                                                   HttpServletRequest request) {
         if (jwtService.isCustomer(request)) {
-            long userId = jwtService.getCurrentUser(request).getUserId();
+            User user= jwtService.getCurrentUser(request);
+            long userId= jwtService.getCurrentUser(request).getUserId();
             //check validator + permission
-            Product product = feedBack.getProduct();
+            Product product = productService.findById(productId);
             if (product == null) {
                 return new ResponseEntity(new MessageResponse().getResponse("Sán phẩm không tồn tại!"), HttpStatus.BAD_REQUEST);
             }
             List<Long> getlistProductBought = orderService.getlistProductBought(userId);
-            if (!getlistProductBought.contains(product.getId())) {
+            if (getlistProductBought.size()==0) return new ResponseEntity(new MessageResponse().getResponse("Bạn chưa mua sản phẩm nào!"), HttpStatus.BAD_REQUEST);
+            if (!getlistProductBought.contains(productId)) {
                 return new ResponseEntity(new MessageResponse().getResponse("Bạn chưa mua sản phẩm này!"), HttpStatus.BAD_REQUEST);
             }
-            feedBack.setDatePost(TimeHelper.getInstance().getNow());
+            FeedBack feedBack= new FeedBack(content, star, product, TimeHelper.getInstance().getNow(), user);
+            if (image.equals("")){
+                feedBack.setImage("");
+            }
+            else {
+                feedBack.setImage(filesStorageService.save(image));
+            }
             feedbackService.save(feedBack);
             return new ResponseEntity<>(feedBack, HttpStatus.OK);
         }

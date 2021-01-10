@@ -17,7 +17,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.apache.commons.collections4.ListUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,7 +101,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Long> getlistProductBought(long userId){
         List<Long> productIds= new ArrayList<>();
-        List<Order> orderList= getListOrderByStatus(InputParam.FINISHED, userId);
+        List<Order> orderListFinish= getListOrderByStatus(InputParam.FINISHED, userId);
+        List<Order> orderListShip= getListOrderByStatus(InputParam.SHIPPING, userId);
+        List<Order> orderList= Stream.concat(orderListFinish.stream(), orderListShip.stream())
+                .collect(Collectors.toList()).stream().distinct().collect(Collectors.toList());
         if (orderList== null || orderList.size()==0){
             return null;
         }
@@ -110,6 +115,18 @@ public class OrderServiceImpl implements OrderService {
             }
         }
         return productIds.stream().distinct().collect(Collectors.toList());
+    }
+
+    public static void main(String[] args) {
+        List<Integer> list1= new ArrayList<>();
+        list1.add(1);
+        list1.add(2);
+        List<Integer> list2= new ArrayList<>();
+        list2.add(2);
+        list2.add(3);
+        List<Integer> orderList= Stream.concat(list1.stream(), list2.stream())
+                .collect(Collectors.toList()).stream().distinct().collect(Collectors.toList());
+        System.out.println(orderList.stream().distinct().collect(Collectors.toList()));
     }
     @Override
     public List<Order> getListOrderByUserId(long userId) {
@@ -314,10 +331,4 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
-
-    public static void main(String[] args) throws ParseException {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = simpleDateFormat.parse("22/12/2020");
-        System.out.println(date.getTime());
-    }
 }
