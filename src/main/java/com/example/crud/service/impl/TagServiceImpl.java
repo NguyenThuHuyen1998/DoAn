@@ -1,25 +1,27 @@
 package com.example.crud.service.impl;
 
-//import com.example.crud.entity.PostTag;
+import com.example.crud.entity.News;
+import com.example.crud.entity.PostTag;
 import com.example.crud.entity.Tag;
-//import com.example.crud.repository.PostTagRepository;
+import com.example.crud.repository.PostTagRepository;
 import com.example.crud.repository.TagRepository;
 import com.example.crud.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class TagServiceImpl implements TagService {
 
     private TagRepository tagRepository;
-    //private PostTagRepository postTagRepository;
+    private PostTagRepository postTagRepository;
 
     @Autowired
-    private TagServiceImpl(TagRepository tagRepository){
+    private TagServiceImpl(TagRepository tagRepository, PostTagRepository postTagRepository){
         this.tagRepository= tagRepository;
-//        this.postTagRepository= postTagRepository;
+        this.postTagRepository= postTagRepository;
     }
 
     @Override
@@ -56,10 +58,33 @@ public class TagServiceImpl implements TagService {
         return null;
     }
 
-//    @Override
-//    public void savePostTag(PostTag postTag) {
-//        postTagRepository.save(postTag);
-//    }
+    @Override
+    public void savePostTag(PostTag postTag) {
+        postTagRepository.save(postTag);
+    }
+
+    @Override
+    public List<PostTag> getListPostTag() {
+        return (List<PostTag>) postTagRepository.findAll();
+    }
+
+    @Override
+    public List<Tag> getListTagOfNews(News news) {
+        List<PostTag> postTagList= (List<PostTag>) postTagRepository.findAll();
+        List<PostTag> newsListHasTag= new ArrayList<>();
+        for (PostTag postTag: postTagList){
+            if (postTag.getNews().getNewsId()== news.getNewsId()){
+                newsListHasTag.add(postTag);
+            }
+        }
+        List<Tag> tagList= new ArrayList<>();
+        if (newsListHasTag.size()>0){
+            for (PostTag postTag: newsListHasTag){
+                tagList.add(postTag.getTag());
+            }
+        }
+        return tagList;
+    }
 
 
 }

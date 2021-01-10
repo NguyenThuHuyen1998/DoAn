@@ -2,6 +2,7 @@ package com.example.crud.controller;
 
 import com.example.crud.constants.InputParam;
 import com.example.crud.entity.*;
+import com.example.crud.response.MessageResponse;
 import com.example.crud.response.OrderResponse;
 import com.example.crud.output.OrderLineForm;
 import com.example.crud.service.*;
@@ -101,26 +102,26 @@ public class OrderController {
             long addressId= jsonObject.getLong("addressId");
             Address address= shipService.getAddress(addressId);
             if (address== null){
-                return new ResponseEntity("Địa chỉ không tồn tại!", HttpStatus.OK);
+                return new ResponseEntity(new MessageResponse().getResponse("Địa chỉ không tồn tại!"), HttpStatus.OK);
             }
             String note= jsonObject.getString("note");
             String delivery= jsonObject.getString("delivery");
             if (delivery== null || delivery.equals("")){
-                return new ResponseEntity("Hãy chọn hình thức vận chuyển", HttpStatus.OK);
+                return new ResponseEntity(new MessageResponse().getResponse("Hãy chọn hình thức vận chuyển"), HttpStatus.OK);
             }
             String code= jsonObject.getString("code");
             Voucher voucher= null;
             if (!code.equals("")){
                 voucher= voucherService.getVoucherByCode(code);
                 if (voucher== null){
-                    return new ResponseEntity("Mã giảm giá không hợp lệ!", HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity(new MessageResponse().getResponse("Mã giảm giá không hợp lệ!"), HttpStatus.BAD_REQUEST);
                 }
                 int checkDate= voucherService.checkDate(voucher);
                 if (checkDate==1){
-                    return new ResponseEntity("Mã giảm giá chưa đến thời gian áp dụng.", HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity(new MessageResponse().getResponse("Mã giảm giá chưa đến thời gian áp dụng."), HttpStatus.BAD_REQUEST);
                 }
                 if (checkDate==-1){
-                    return new ResponseEntity("Mã giảm giá đã hết hạn.", HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity(new MessageResponse().getResponse("Mã giảm giá đã hết hạn."), HttpStatus.BAD_REQUEST);
                 }
             }
             JSONObject jsonProduct= jsonObject.getJSONObject("productList");
@@ -131,7 +132,7 @@ public class OrderController {
             userService.add(user);
             return new ResponseEntity(orderResponse, HttpStatus.OK);
         }
-        return new ResponseEntity("Đăng nhập trước khi thực hiện", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Đăng nhập trước khi thực hiện"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     public static Map<String, Integer> toMap(JSONObject object) throws JSONException {
@@ -155,7 +156,7 @@ public class OrderController {
             OrderResponse orderResponse= orderService.showOrder(user);
             return new ResponseEntity<>(orderResponse, HttpStatus.OK);
         }
-        return new ResponseEntity("Đăng nhập trước khi thực hiện", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Đăng nhập trước khi thực hiện"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
 
@@ -171,23 +172,23 @@ public class OrderController {
             if (!code.equals("")){
                 voucher= voucherService.getVoucherByCode(code);
                 if (voucher== null){
-                    return new ResponseEntity("Mã giảm giá không hợp lệ!", HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity(new MessageResponse().getResponse("Mã giảm giá không hợp lệ!"), HttpStatus.BAD_REQUEST);
                 }
                 int checkDate= voucherService.checkDate(voucher);
                 if (checkDate==1){
-                    return new ResponseEntity("Mã giảm giá chưa đến thời gian áp dụng.", HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity(new MessageResponse().getResponse("Mã giảm giá chưa đến thời gian áp dụng."), HttpStatus.BAD_REQUEST);
                 }
                 if (checkDate==-1){
-                    return new ResponseEntity("Mã giảm giá đã hết hạn.", HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity(new MessageResponse().getResponse("Mã giảm giá đã hết hạn."), HttpStatus.BAD_REQUEST);
                 }
             }
             OrderResponse orderResponse= orderService.showOrder(user, voucher);
             if (orderResponse== null){
-                return new ResponseEntity("Mã giảm giá áp dụng cho đơn từ "+ voucher.getPriceApply(), HttpStatus.BAD_REQUEST);
+                return new ResponseEntity(new MessageResponse().getResponse("Mã giảm giá áp dụng cho đơn từ "+ voucher.getPriceApply()), HttpStatus.BAD_REQUEST);
             }
             return new ResponseEntity(voucher, HttpStatus.OK);
         }
-        return new ResponseEntity("Đăng nhập trước khi thực hiện", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Đăng nhập trước khi thực hiện"), HttpStatus.METHOD_NOT_ALLOWED);
     }
     //lấy danh sách đơn hàng của 1 user
     //user chỉ được lấy ds đơn hàng của mình nên bắt buộc có user-id
@@ -222,7 +223,7 @@ public class OrderController {
 
             return new ResponseEntity(orderResponses, HttpStatus.OK);
         }
-        return new ResponseEntity("Đăng nhập trước khi thực hiện", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Đăng nhập trước khi thực hiện"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     //Xóa 1 đơn hàng by user
@@ -235,22 +236,22 @@ public class OrderController {
                 Order order = orderService.findById(orderId);
                 if (order.getUser().getUserId() != userId) {
                     logger.error("User not permitt");
-                    return new ResponseEntity("Đăng nhập trước khi thực hiện", HttpStatus.METHOD_NOT_ALLOWED);
+                    return new ResponseEntity(new MessageResponse().getResponse("Đăng nhập trước khi thực hiện"), HttpStatus.METHOD_NOT_ALLOWED);
                 }
                 if (!order.getStatus().equals(InputParam.PROCESSING)) {
                     logger.error("Can't delete this order");
-                    return new ResponseEntity("You can't delete this order", HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity(new MessageResponse().getResponse("Bạn không thể xóa đơn hàng này."), HttpStatus.BAD_REQUEST);
                 } else {
                     order.setStatus(InputParam.CANCEL);
                     orderService.save(order);
-                    return new ResponseEntity("Xóa đơn hàng thành công!",HttpStatus.OK);
+                    return new ResponseEntity(new MessageResponse().getResponse("Xóa đơn hàng thành công!"),HttpStatus.OK);
                 }
             } catch (Exception e) {
                 logger.error(String.valueOf(e));
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity(new MessageResponse().getResponse("Không tìm thấy đơn hàng."),HttpStatus.NOT_FOUND);
             }
         }
-        return new ResponseEntity("Đăng nhập trước khi thực hiện", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Đăng nhập trước khi thực hiện"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     //xem chi tiết 1 đơn hàng
@@ -267,7 +268,7 @@ public class OrderController {
                 OrderResponse orderResponse = new OrderResponse(order, orderLineForms);
                 if (order.getUser().getUserId() != userId) {
                     logger.error("User not permitt");
-                    return new ResponseEntity("Đăng nhập trước khi thực hiện", HttpStatus.METHOD_NOT_ALLOWED);
+                    return new ResponseEntity(new MessageResponse().getResponse("Đăng nhập trước khi thực hiện"), HttpStatus.METHOD_NOT_ALLOWED);
                 }
                 return new ResponseEntity(orderResponse, HttpStatus.OK);
             } catch (Exception e) {
@@ -275,7 +276,7 @@ public class OrderController {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
-        return new ResponseEntity("Đăng nhập trước khi thực hiện", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Đăng nhập trước khi thực hiện"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @PutMapping(value = "/userPage/order/{order-id}")
@@ -287,18 +288,18 @@ public class OrderController {
                 Order order= orderService.findById(orderId);
                 User user= order.getUser();
                 if(userId != user.getUserId() || !order.getStatus().equals(InputParam.SHIPPING) ){
-                    return new ResponseEntity( HttpStatus.METHOD_NOT_ALLOWED);
+                    return new ResponseEntity(new MessageResponse().getResponse("Bạn không thể kế thúc đơn hàng này."), HttpStatus.METHOD_NOT_ALLOWED);
                 }
                 order.setStatus(InputParam.FINISHED);
                 orderService.save(order);
-                return new ResponseEntity<>(HttpStatus.OK);
+                return new ResponseEntity(new MessageResponse().getResponse("Cảm ơn bạn đã xác nhận đơn hàng."),HttpStatus.OK);
             }
             catch (Exception e){
                 logger.error("Order is not exist");
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity(new MessageResponse().getResponse("Không thể kết thúc đơn hàng."),HttpStatus.BAD_REQUEST);
             }
         }
-        return new ResponseEntity("Đăng nhập trước khi thực hiện", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Đăng nhập trước khi thực hiện"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     //----------------------------ADMIN-----------------------------------------
@@ -353,7 +354,7 @@ public class OrderController {
             }
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity("Bạn không phải admin", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải admin"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @GetMapping(value = "/adminPage/order/{order-id}")
@@ -371,7 +372,7 @@ public class OrderController {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
-        return new ResponseEntity("Bạn không phải admin", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải admin"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     //phê duyệt các đơn đang chờ xử lý <input là list các đơn>
@@ -400,14 +401,14 @@ public class OrderController {
                     return new ResponseEntity<>(HttpStatus.OK);
                 }
                 else {
-                    return new ResponseEntity("You cannot perform this action", HttpStatus.METHOD_NOT_ALLOWED);
+                    return new ResponseEntity(new MessageResponse().getResponse("Bạn không thể thực hiện hành động này."), HttpStatus.METHOD_NOT_ALLOWED);
                 }
             }
             catch (Exception e){
-                return new ResponseEntity("Order is not exist", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity(new MessageResponse().getResponse("Đơn hàng không tồn tại."), HttpStatus.BAD_REQUEST);
             }
         }
-        return new ResponseEntity("You isn't admin", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải là admin."), HttpStatus.METHOD_NOT_ALLOWED);
 
     }
 
@@ -419,21 +420,21 @@ public class OrderController {
             try{
                 Order order= orderService.findById(orderId);
                 if (!order.getStatus().equals(InputParam.PROCESSING)) {
-                    return new ResponseEntity("You cannot perform this action", HttpStatus.METHOD_NOT_ALLOWED);
+                    return new ResponseEntity(new MessageResponse().getResponse("Bạn không thể thực hiện hành động này."), HttpStatus.METHOD_NOT_ALLOWED);
                 }
 //                List<OrderLine> orderLines= orderLineService.getListOrderLineInOrder(orderId);
 //                for(OrderLine orderLine: orderLines){
 //                    orderLineService.remove(orderLine);
 //                }
                 orderService.remove(order);
-                return new ResponseEntity("Xóa đơn hàng thành công!", HttpStatus.OK);
+                return new ResponseEntity(new MessageResponse().getResponse("Xóa đơn hàng thành công!"), HttpStatus.OK);
             }
             catch (Exception e){
                 logger.error("Order is not exist");
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
-        return new ResponseEntity("You isn't admin", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải là admin."), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
 

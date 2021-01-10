@@ -3,6 +3,7 @@ package com.example.crud.controller;
 import com.example.crud.entity.*;
 import com.example.crud.response.CartResponse;
 import com.example.crud.response.CartItemResponse;
+import com.example.crud.response.MessageResponse;
 import com.example.crud.service.CartItemService;
 import com.example.crud.service.CartService;
 import com.example.crud.service.JwtService;
@@ -56,7 +57,7 @@ public class CartController {
                 CartResponse cartResponse = new CartResponse(cart, cartItemResponses);
                 return new ResponseEntity(cartResponse, HttpStatus.OK);
             }
-            return new ResponseEntity("Đăng nhập trước khi thực hiện", HttpStatus.METHOD_NOT_ALLOWED);
+            return new ResponseEntity(new MessageResponse().getResponse("Đăng nhập trước khi thực hiện"), HttpStatus.METHOD_NOT_ALLOWED);
         }
         catch (Exception e){
             logger.error(String.valueOf(e));
@@ -71,13 +72,13 @@ public class CartController {
             if(jwtService.isCustomer(request)){
                 long userId= jwtService.getCurrentUser(request).getUserId();
                 cartItemService.deleteAllCartItem(userId);
-                return new ResponseEntity("Xóa giỏ hàng thành công!",HttpStatus.OK);
+                return new ResponseEntity(new MessageResponse().getResponse("Xóa giỏ hàng thành công!"),HttpStatus.OK);
             }
-            return new ResponseEntity("Đăng nhập trước khi thực hiện", HttpStatus.METHOD_NOT_ALLOWED);
+            return new ResponseEntity(new MessageResponse().getResponse("Đăng nhập trước khi thực hiện"), HttpStatus.METHOD_NOT_ALLOWED);
         }
         catch (Exception e){
             logger.error(String.valueOf(e));
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity(new MessageResponse().getResponse("Không tìm thấy giỏ hàng."),HttpStatus.NOT_FOUND);
         }
     }
 }

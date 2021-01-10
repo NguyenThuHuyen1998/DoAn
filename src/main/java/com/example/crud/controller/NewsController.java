@@ -1,16 +1,15 @@
 package com.example.crud.controller;
 
-import com.example.crud.constants.InputParam;
 import com.example.crud.entity.News;
-//import com.example.crud.entity.PostTag;
+import com.example.crud.entity.PostTag;
 import com.example.crud.entity.Tag;
 import com.example.crud.entity.User;
 import com.example.crud.response.MessageResponse;
+import com.example.crud.response.NewsReponse;
 import com.example.crud.service.FilesStorageService;
 import com.example.crud.service.JwtService;
 import com.example.crud.service.NewsService;
 import com.example.crud.service.TagService;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -19,7 +18,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @RestController
 public class NewsController {
@@ -28,21 +29,27 @@ public class NewsController {
     private NewsService newsService;
     private JwtService jwtService;
     private TagService tagService;
-//    private PostTag postTag;
     private FilesStorageService storageService;
 
-    public NewsController(NewsService newsService, JwtService jwtService, TagService tagService,  FilesStorageService filesStorageService){
-        this.newsService= newsService;
-        this.jwtService= jwtService;
-        this.tagService= tagService;
-//        this.postTag= postTag;
-        this.storageService= filesStorageService;
+    public NewsController(NewsService newsService, JwtService jwtService, TagService tagService,  FilesStorageService filesStorageService) {
+        this.newsService = newsService;
+        this.jwtService = jwtService;
+        this.tagService = tagService;
+        this.storageService = filesStorageService;
     }
 
     @GetMapping(value = "/news")
-    public ResponseEntity<News> getAllNews(){
-        List<News> listNews= newsService.getListNews();
-        return new ResponseEntity(listNews, HttpStatus.OK);
+    public ResponseEntity<News> getAllNews() {
+        List<News> listNews = newsService.getListNews();
+        if (listNews.size()>0){
+            for (News news: listNews){
+                NewsReponse newsReponse = new NewsReponse(news.getNewsId(), news.getTitle(), news.getCover(), news.getContent());
+                List<Tag> tagList= tagService.getListTagOfNews(news);
+                newsReponse.setTagList(tagList);
+            }
+            return new ResponseEntity(listNews, HttpStatus.OK);
+        }
+        return new ResponseEntity(new MessageResponse(" Chưa có bài viết nào."), HttpStatus.NO_CONTENT);
     }
 
     @PostMapping(value = "/news")
@@ -50,63 +57,68 @@ public class NewsController {
                                          @RequestParam("content") String content,
                                          @RequestParam("cover") MultipartFile cover,
                                          @RequestParam(value = "tags", required = false) String[] tagNames,
-                                         HttpServletRequest request){
-        if (jwtService.isAdmin(request)){
-            User user= jwtService.getCurrentUser(request);
-            News news= new News();
+                                         HttpServletRequest request) {
+        if (jwtService.isAdmin(request)) {
+            User user = jwtService.getCurrentUser(request);
+            News news = new News();
             news.setUser(user);
             news.setContent(content);
             news.setTitle(title);
-            String fileName= storageService.save(cover);
+            String fileName = storageService.save(cover);
             news.setCover(fileName);
             news.setDatePost(new Date().getTime());
             newsService.saveNews(news);
-//            List<Tag> tagList=  new ArrayList<>();
-//            for (String tagName: tagNames){
-//                Tag tag= tagService.getTagByName(tagName);
-//                if (tag!= null){
-//                    tagList.add(tag);
-//                }
-//                else return new ResponseEntity("Tag không tồn tại.", HttpStatus.BAD_REQUEST);
-//            }
-//            if (tagList.size()>0){
-//                for (Tag tag: tagList){
-//                    PostTag postTag= new PostTag(tag, news);
-//                    tagService.savePostTag(postTag);
-//                }
-//            }
+            List<Tag> tagList=  new ArrayList<>();
+            for (String tagName: tagNames){
+                Tag tag= tagService.getTagByName(tagName);
+                if (tag!= null){
+                    tagList.add(tag);
+                }
+                else return new ResponseEntity(new MessageResponse().getResponse("Tag không tồn tại."), HttpStatus.BAD_REQUEST);
+            }
+            if (tagList.size()>0){
+                for (Tag tag: tagList){
+                    PostTag postTag= new PostTag(tag, news);
+                    tagService.savePostTag(postTag);
+                }
+            }
             return new ResponseEntity<>(news, HttpStatus.OK);
         }
         return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải admin"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @PutMapping(value = "/news/{id}")
-    public ResponseEntity<News> updateNews(@RequestBody News news,
+    public ResponseEntity<News> updateNews(@RequestParam(value = "title", required = true, defaultValue = "") String title,
+                                           @RequestParam(value = "content", required = true, defaultValue = "") String content,
+                                           @RequestParam(value = "cover", required = false) MultipartFile cover,
+                                           @RequestParam(value = "tags", required = false, defaultValue = "") String[] tagNames,
                                            @PathVariable(name = "id") long newsId,
-                                           HttpServletRequest request){
-        if(jwtService.isAdmin(request)){
-            try {
-                newsService.saveNews(news);
-                return new ResponseEntity<>(news, HttpStatus.OK);
+                                           HttpServletRequest request) {
+        if (jwtService.isAdmin(request)) {
+            News news = newsService.getNewsById(newsId);
+            if (news == null) {
+                return new ResponseEntity(new MessageResponse().getResponse("Tin tức không tồn tại."), HttpStatus.BAD_REQUEST);
             }
-            catch (Exception e){
-                logger.error(e.getMessage());
-                return new ResponseEntity(new MessageResponse().getResponse("Tin tức không tồn tại."),HttpStatus.BAD_REQUEST);
+            news.setTitle(title.equals("") ? news.getTitle() : title);
+            news.setContent(content.equals("") ? news.getContent() : content);
+            if (cover!= null){
+                news.setCover(storageService.save(cover));
             }
+            newsService.saveNews(news);
+            return new ResponseEntity<>(news, HttpStatus.OK);
         }
-        return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải admin"), HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Bạn không thể sửa bài viết này."), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @DeleteMapping(value = "/news/{id}")
     public ResponseEntity<News> deleteNews(@PathVariable(name = "id") long newsId,
-                                           HttpServletRequest request){
-        if(jwtService.isAdmin(request)){
-            try{
-                News news= newsService.getNewsById(newsId);
+                                           HttpServletRequest request) {
+        if (jwtService.isAdmin(request)) {
+            try {
+                News news = newsService.getNewsById(newsId);
                 newsService.deleteNews(news);
                 return new ResponseEntity(new MessageResponse().getResponse("Xóa bài viết thành công!"), HttpStatus.OK);
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 logger.error(e.getMessage());
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }

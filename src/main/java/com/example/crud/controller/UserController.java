@@ -154,7 +154,7 @@ public class UserController {
 
     @PostMapping(value = "test")
     public ResponseEntity<Order> test(){
-        return new ResponseEntity(new MessageResponse().getResponse("test"), HttpStatus.OK);
+        return new ResponseEntity(new MessageResponse("test"), HttpStatus.OK);
     }
     @GetMapping(value = "/userPage/addressShip")
     public ResponseEntity<Address> getListAddressOfUser(HttpServletRequest request){
@@ -205,9 +205,9 @@ public class UserController {
                 return new ResponseEntity(new MessageResponse().getResponse("Địa chỉ không hợp lệ!"), HttpStatus.BAD_REQUEST);
             }
             shipService.delete(address);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity(new MessageResponse().getResponse("Xóa địa chỉ thành công."), HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải là admin!"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     //-------------------------------------------ADMIN---------------------------------------------
@@ -222,7 +222,7 @@ public class UserController {
             }
             return new ResponseEntity(userList, HttpStatus.OK);
         }
-        return new ResponseEntity("You isn't admin", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải là admin."), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @DeleteMapping(value = "/adminPage/users/{id}")
@@ -240,9 +240,9 @@ public class UserController {
             }
 
             userService.delete(user);
-            return new ResponseEntity("Success", HttpStatus.OK);
+            return new ResponseEntity(new MessageResponse().getResponse("Vô hiệu hóa tài khoản thành công."), HttpStatus.OK);
         }
-        return new ResponseEntity("You isn't admin", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải là admin."), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
 
@@ -252,14 +252,14 @@ public class UserController {
         if (jwtHandler.isAdmin(request)) {
             User user = userService.findById(id);
             if (user == null) {
-                return new ResponseEntity("Người dùng không tồn tại", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity(new MessageResponse().getResponse("Người dùng không tồn tại"), HttpStatus.BAD_REQUEST);
             } else {
                 user.setRole(InputParam.ADMIN);
                 userService.update(user);
                 return new ResponseEntity(user, HttpStatus.OK);
             }
         }
-        return new ResponseEntity("Bạn không phải là admin", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải là admin"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @PutMapping(value = "/adminPage/lockUser/{id}")
@@ -268,13 +268,13 @@ public class UserController {
         if (jwtHandler.isAdmin(request)) {
             User user = userService.findById(userId);
             if (user == null) {
-                return new ResponseEntity("Người dùng không tồn tại", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity(new MessageResponse().getResponse("Người dùng không tồn tại"), HttpStatus.BAD_REQUEST);
             } else {
                 user.setEnable(false);
                 userService.update(user);
                 return new ResponseEntity(user, HttpStatus.OK);
             }
         }
-        return new ResponseEntity("Bạn không phải là admin", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải là admin"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 }

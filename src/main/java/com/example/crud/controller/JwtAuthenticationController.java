@@ -78,11 +78,11 @@ public class JwtAuthenticationController {
     public ResponseEntity<User> saveUser(@RequestBody User user) throws Exception {
         User currentUser = userService.findByName(user.getUserName());
         if (currentUser != null) {
-            return new ResponseEntity(new JSONObject("Username đã tồn tại"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new MessageResponse().getResponse("Username đã tồn tại"), HttpStatus.BAD_REQUEST);
         }
         String email = user.getEmail();
         if (!EmailValidator.getInstance().isValid(email)) {
-            return new ResponseEntity("Email không hợp lệ!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new MessageResponse().getResponse("Email không hợp lệ!"), HttpStatus.BAD_REQUEST);
         }
         user.setRole(InputParam.USER);
         user.setAvatar("avatardefault.png");
@@ -105,7 +105,7 @@ public class JwtAuthenticationController {
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
-        return new ResponseEntity("Đăng nhập trước khi thực hiện", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(new MessageResponse().getResponse("Đăng nhập trước khi thực hiện"), HttpStatus.BAD_REQUEST);
 
     }
 

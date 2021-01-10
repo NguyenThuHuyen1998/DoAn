@@ -50,6 +50,6 @@ public class TagController {
             if (tagList!= null || tagList.size()> 0){
                 return new ResponseEntity(tagList, HttpStatus.OK);
             }
-            return new ResponseEntity(new JSONObject("Chưa có tag nào."), HttpStatus.NO_CONTENT);
+            return new ResponseEntity(new MessageResponse().getResponse("Chưa có tag nào."), HttpStatus.NO_CONTENT);
     }
 }

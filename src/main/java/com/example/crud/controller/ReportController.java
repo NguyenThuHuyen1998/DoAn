@@ -4,6 +4,7 @@ import com.example.crud.constants.InputParam;
 import com.example.crud.entity.Order;
 import com.example.crud.entity.OrderLine;
 import com.example.crud.helper.TimeHelper;
+import com.example.crud.response.MessageResponse;
 import com.example.crud.service.*;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,11 +54,11 @@ public class ReportController {
                     return new ResponseEntity(orderList, HttpStatus.OK);
             }
             catch (Exception e){
-                return new ResponseEntity(new JSONObject("Không thể xem báo cáo thống kê."),HttpStatus.BAD_REQUEST);
+                return new ResponseEntity(new MessageResponse().getResponse("Không thể xem báo cáo thống kê."),HttpStatus.BAD_REQUEST);
             }
         }
 
-        return new ResponseEntity("Bạn không phải là admin", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải là admin"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @GetMapping(value = "/adminPage/reportTime")
@@ -75,7 +76,7 @@ public class ReportController {
             }
         }
 
-        return new ResponseEntity("You isn't admin", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải là admin"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     public static void main(String[] args) {

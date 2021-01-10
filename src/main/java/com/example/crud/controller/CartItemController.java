@@ -144,7 +144,7 @@ public class CartItemController {
             return new ResponseEntity(new MessageResponse().getResponse("Đăng nhập trước khi thực hiện"), HttpStatus.METHOD_NOT_ALLOWED);
         }
         catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity(new MessageResponse().getResponse("Không có sản phẩm trong giỏ hàng."),HttpStatus.NOT_FOUND);
         }
     }
 
@@ -155,12 +155,12 @@ public class CartItemController {
             long userId= jwtService.getCurrentUser(request).getUserId();
             CartItem cartItem= cartItemService.getCartItem(cartItemId);
             if (cartItem== null){
-                return new ResponseEntity("Kiểm tra lại đầu vào", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity(new MessageResponse().getResponse("Kiểm tra lại đầu vào"), HttpStatus.BAD_REQUEST);
             }
             cartItemService.deleteCartItem(cartItem);
-            return new ResponseEntity("Xóa giỏ hàng thành công!",HttpStatus.OK);
+            return new ResponseEntity(new MessageResponse().getResponse("Xóa giỏ hàng thành công!"),HttpStatus.OK);
         }
-        return new ResponseEntity("Đăng nhập trước khi thực hiện", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Đăng nhập trước khi thực hiện"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @DeleteMapping("/userPage/cartItems")
@@ -168,9 +168,9 @@ public class CartItemController {
         if(jwtService.isCustomer(request)){
             long userId= jwtService.getCurrentUser(request).getUserId();
             cartItemService.deleteAllCartItem(userId);
-            return new ResponseEntity("Xóa giỏ hàng thành công!",HttpStatus.OK);
+            return new ResponseEntity(new MessageResponse().getResponse("Xóa giỏ hàng thành công!"),HttpStatus.OK);
         }
-        return new ResponseEntity("Đăng nhập trước khi thực hiện", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Đăng nhập trước khi thực hiện"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @GetMapping(value = "/userPage/cartItems/{cart-item-id}")
@@ -190,6 +190,6 @@ public class CartItemController {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
-        return new ResponseEntity("Đăng nhập trước khi thực hiện", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Đăng nhập trước khi thực hiện"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 }

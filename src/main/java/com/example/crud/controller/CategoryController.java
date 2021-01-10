@@ -3,6 +3,7 @@ package com.example.crud.controller;
 import com.example.crud.constants.InputParam;
 import com.example.crud.entity.Category;
 import com.example.crud.entity.Product;
+import com.example.crud.response.MessageResponse;
 import com.example.crud.service.CategoryService;
 import com.example.crud.service.JwtService;
 import com.example.crud.service.ProductService;
@@ -43,7 +44,7 @@ public class CategoryController {
     public ResponseEntity<Category> getAll(HttpServletRequest request) {
         List<Category> categoryList = categoryService.findAllCategory();
         if (categoryList == null || categoryList.size() == 0) {
-            return new ResponseEntity(new JSONObject("Chưa có danh mục."),HttpStatus.NO_CONTENT);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity(categoryList, HttpStatus.OK);
     }
@@ -53,13 +54,13 @@ public class CategoryController {
     public ResponseEntity<Product> getListProductFromCategory(@PathVariable(name = "cate-id") long categoryId) {
         try {
             if (categoryService.findById(categoryId) == null) {
-                return new ResponseEntity(new JSONObject("Danh mục không tồn tại."),HttpStatus.BAD_REQUEST);
+                return new ResponseEntity(new MessageResponse().getResponse("Danh mục không tồn tại."),HttpStatus.BAD_REQUEST);
             }
             List<Product> productList = categoryService.getListProductFromCategory(categoryId);
             if (productList.size() == 0) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             return new ResponseEntity(productList, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity(new JSONObject("Không có sản phẩm thuộc danh mục này."),HttpStatus.NO_CONTENT);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
     }
 
@@ -71,7 +72,7 @@ public class CategoryController {
 //            httpHeaders.setLocation(builder.path("/adminPage/categories/{id}").buildAndExpand(category.getId()).toUri());
             return new ResponseEntity<>(category, HttpStatus.CREATED);
         }
-        return new ResponseEntity(new JSONObject("Bạn không phải admin"), HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải admin"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @GetMapping(value = "/adminPage/categories/{id}")
@@ -79,29 +80,29 @@ public class CategoryController {
         if (jwtService.isAdmin(request)) {
             Category category = categoryService.findById(categoryId);
             if (category == null) {
-                return new ResponseEntity(new JSONObject("Danh mục không tồn tại"), HttpStatus.NO_CONTENT);
+                return new ResponseEntity( HttpStatus.NO_CONTENT);
             }
 
             return new ResponseEntity(category, HttpStatus.OK);
         }
-        return new ResponseEntity(new JSONObject("Bạn không phải admin"), HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải admin"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @PutMapping(value = "/adminPage/categories/{id}")
     public ResponseEntity<Category> updateCategory(@PathVariable("id") long categoryId, @RequestBody Category category, HttpServletRequest request) {
         if (jwtService.isAdmin(request)) {
             if (category.getId() != categoryId || category.getId() == 0) {
-                return new ResponseEntity(new JSONObject("Kiểm tra thông tin đầu vào!"), HttpStatus.BAD_REQUEST);
+                return new ResponseEntity(new MessageResponse().getResponse("Kiểm tra thông tin đầu vào!"), HttpStatus.BAD_REQUEST);
             }
             try {
                 categoryService.findById(categoryId);
                 categoryService.update(category);
                 return new ResponseEntity<>(category, HttpStatus.OK);
             } catch (Exception e) {
-                return new ResponseEntity(new JSONObject("Danh mục không tồn tại"), HttpStatus.BAD_REQUEST);
+                return new ResponseEntity(new MessageResponse().getResponse("Danh mục không tồn tại"), HttpStatus.BAD_REQUEST);
             }
         }
-        return new ResponseEntity(new JSONObject("Bạn không phải admin"), HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải admin"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @DeleteMapping(value = "/adminPage/categories/{id}")
@@ -110,16 +111,16 @@ public class CategoryController {
         if (jwtService.isAdmin(request)) {
                 Category currentCategory = categoryService.findById(categoryId);
                 if (currentCategory== null){
-                    return new ResponseEntity(new JSONObject("Danh mục không tồn tại"), HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity(new MessageResponse().getResponse("Danh mục không tồn tại"), HttpStatus.BAD_REQUEST);
                 }
                 List<Product> list= productService.findByCategoryID(categoryId);
                 if (list.size()>0){
-                    return new ResponseEntity(new JSONObject("Có sản phẩm thuộc danh mục này, không thể xóa danh mục!"), HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity(new MessageResponse().getResponse("Có sản phẩm thuộc danh mục này, không thể xóa danh mục!"), HttpStatus.BAD_REQUEST);
                 }
                 categoryService.remove(currentCategory);
-                return new ResponseEntity(new JSONObject("Xóa danh mục thành công!"),HttpStatus.OK);
+                return new ResponseEntity(new MessageResponse().getResponse("Xóa danh mục thành công!"),HttpStatus.OK);
 
         }
-        return new ResponseEntity(new JSONObject("Bạn không phải admin"), HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải admin"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 }

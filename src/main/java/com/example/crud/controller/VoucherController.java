@@ -53,15 +53,15 @@ public class VoucherController {
             long start= TimeHelper.getInstance().convertTimestamp(dateStart + " 00:00:00");
             long end= TimeHelper.getInstance().convertTimestamp(dateEnd+" 23:59:59");
             if (end< new Date().getTime()){
-                return new ResponseEntity("Ngày kết thúc không hợp lệ!", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity(new MessageResponse().getResponse("Ngày kết thúc không hợp lệ!"), HttpStatus.BAD_REQUEST);
             }
             if (start>= end){
-                return new ResponseEntity("Ngày kết thúc không thể nhỏ hơn ngày bắt đầu!", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity(new MessageResponse().getResponse("Ngày kết thúc không thể nhỏ hơn ngày bắt đầu!"), HttpStatus.BAD_REQUEST);
             }
             voucherService.addVoucher(voucher);
             return new ResponseEntity<>(voucher, HttpStatus.OK);
         }
-        return new ResponseEntity("Bạn không phải là admin", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải là admin"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @DeleteMapping(value = "/adminPage/voucher/{voucher-id}")
@@ -71,11 +71,11 @@ public class VoucherController {
             Voucher voucher= voucherService.getVoucherById(voucherId);
             if (voucher!= null){
                 voucherService.deleteVoucher(voucher);
-                return new ResponseEntity("Xóa mã giảm giá thành công",HttpStatus.OK);
+                return new ResponseEntity(new MessageResponse().getResponse("Xóa mã giảm giá thành công"),HttpStatus.OK);
             }
-            return new ResponseEntity("Voucher không tồn tại!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new MessageResponse().getResponse("Voucher không tồn tại!"), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity("Bạn không phải là admin", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải là admin"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @PutMapping(value = "/adminPage/voucher/{voucher-id}")
@@ -89,17 +89,17 @@ public class VoucherController {
                 long start= TimeHelper.getInstance().convertTimestamp(dateStart + " 00:00:00");
                 long end= TimeHelper.getInstance().convertTimestamp(dateEnd+" 23:59:59");
                 if (end< new Date().getTime()){
-                    return new ResponseEntity("Ngày kết thúc không hợp lệ!", HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity(new MessageResponse().getResponse("Ngày kết thúc không hợp lệ!"), HttpStatus.BAD_REQUEST);
                 }
                 if (start>= end){
-                    return new ResponseEntity("Ngày kết thúc không thể nhỏ hơn ngày bắt đầu!", HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity(new MessageResponse().getResponse("Ngày kết thúc không thể nhỏ hơn ngày bắt đầu!"), HttpStatus.BAD_REQUEST);
                 }
                 voucherService.addVoucher(voucher);
-                return new ResponseEntity("Cập nhật mã giảm giá thành công!", HttpStatus.OK);
+                return new ResponseEntity(new MessageResponse().getResponse("Cập nhật mã giảm giá thành công!"), HttpStatus.OK);
             }
-            return new ResponseEntity("Voucher không tồn tại!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new MessageResponse().getResponse("Voucher không tồn tại!"), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity("Bạn không phải là admin", HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải là admin"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
 }

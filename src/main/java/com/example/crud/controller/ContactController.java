@@ -32,7 +32,7 @@ public class ContactController {
         if (emailService.contactToAdmin(sb.toString())) {
             return new ResponseEntity(new MessageResponse().getResponse("Hãy để ý email của bạn, admin sẽ phản hổi trong vòng 1 ngày"), HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(new MessageResponse().getResponse("Không thể gửi email."),HttpStatus.BAD_REQUEST);
     }
 
 }
