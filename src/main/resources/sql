@@ -33,7 +33,7 @@ CREATE TABLE `hibernate_sequence` (
 
 LOCK TABLES `hibernate_sequence` WRITE;
 /*!40000 ALTER TABLE `hibernate_sequence` DISABLE KEYS */;
-INSERT INTO `hibernate_sequence` VALUES (61);
+INSERT INTO `hibernate_sequence` VALUES (65);
 /*!40000 ALTER TABLE `hibernate_sequence` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -80,6 +80,7 @@ CREATE TABLE `tbl_feedback` (
   `star` int(11) NOT NULL,
   `product_id` bigint(20) NOT NULL,
   `user_id` bigint(20) NOT NULL,
+  `image` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`feedback_id`),
   KEY `FKir8tw33nbhi6vr8uqqbc73oed` (`product_id`),
   KEY `FKeraommrt51jrh7xt8v07ev6ma` (`user_id`),
@@ -94,7 +95,7 @@ CREATE TABLE `tbl_feedback` (
 
 LOCK TABLES `tbl_feedback` WRITE;
 /*!40000 ALTER TABLE `tbl_feedback` DISABLE KEYS */;
-INSERT INTO `tbl_feedback` VALUES (22,'Hàng giao nhanh, sản phẩm như hình, giá cả phải chăng.','07/01/2021',5,4,5),(41,'Hàng giao nhanh, sản phẩm như hình, giá cả phải chăng.','10/01/2021',5,36,5);
+INSERT INTO `tbl_feedback` VALUES (22,'Hàng giao nhanh, sản phẩm như hình, giá cả phải chăng.','07/01/2021',5,4,5,''),(41,'Hàng giao nhanh, sản phẩm như hình, giá cả phải chăng.','10/01/2021',5,36,5,'');
 /*!40000 ALTER TABLE `tbl_feedback` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -123,6 +124,7 @@ CREATE TABLE `tbl_post_tag` (
 
 LOCK TABLES `tbl_post_tag` WRITE;
 /*!40000 ALTER TABLE `tbl_post_tag` DISABLE KEYS */;
+INSERT INTO `tbl_post_tag` VALUES (63,62,46),(64,62,45);
 /*!40000 ALTER TABLE `tbl_post_tag` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -146,7 +148,7 @@ CREATE TABLE `tbl_tag` (
 
 LOCK TABLES `tbl_tag` WRITE;
 /*!40000 ALTER TABLE `tbl_tag` DISABLE KEYS */;
-INSERT INTO `tbl_tag` VALUES (45,'dưỡng trắng'),(46,'dưỡng thể');
+INSERT INTO `tbl_tag` VALUES (45,'dưỡng trắng'),(46,'dưỡng thể'),(61,'tag1 ');
 /*!40000 ALTER TABLE `tbl_tag` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -318,6 +320,7 @@ CREATE TABLE `tblnews` (
 
 LOCK TABLES `tblnews` WRITE;
 /*!40000 ALTER TABLE `tblnews` DISABLE KEYS */;
+INSERT INTO `tblnews` VALUES (62,'content',1610279243228,'title',42,'10012021184713.png');
 /*!40000 ALTER TABLE `tblnews` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -465,4 +468,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-01-10 17:12:06
+-- Dump completed on 2021-01-10 19:57:50
