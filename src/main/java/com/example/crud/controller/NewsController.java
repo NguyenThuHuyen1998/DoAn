@@ -10,6 +10,8 @@ import com.example.crud.service.FilesStorageService;
 import com.example.crud.service.JwtService;
 import com.example.crud.service.NewsService;
 import com.example.crud.service.TagService;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -53,24 +55,25 @@ public class NewsController {
     }
 
     @PostMapping(value = "adminPage/news")
-    public ResponseEntity<News> postNews(@RequestParam("title") String title,
-                                         @RequestParam("content") String content,
-                                         @RequestParam("cover") MultipartFile cover,
-                                         @RequestParam(value = "tags", required = false) String[] tags,
+    public ResponseEntity<News> postNews(@RequestParam("cover") MultipartFile cover,
+                                         @RequestBody String dataTag,
                                          HttpServletRequest request) {
         if (jwtService.isAdmin(request)) {
             User user = jwtService.getCurrentUser(request);
             News news = new News();
             news.setUser(user);
-            news.setContent(content);
-            news.setTitle(title);
+            JSONObject jsonObject= new JSONObject(dataTag);
+            news.setContent(jsonObject.getString("content"));
+            news.setTitle(jsonObject.getString("title"));
             String fileName = storageService.save(cover);
             news.setCover(fileName);
             news.setDatePost(new Date().getTime());
             newsService.saveNews(news);
             List<Tag> tagList=  new ArrayList<>();
-            for (String tagName: tags){
-                Tag tag= tagService.getTagByName(tagName);
+            JSONArray array= new JSONObject(dataTag).getJSONArray("tags");
+
+            for (int i=0; i< array.length(); i++){
+                Tag tag= tagService.getTagByName((String) array.get(i));
                 if (tag!= null){
                     tagList.add(tag);
                 }
