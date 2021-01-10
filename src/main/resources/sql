@@ -33,7 +33,7 @@ CREATE TABLE `hibernate_sequence` (
 
 LOCK TABLES `hibernate_sequence` WRITE;
 /*!40000 ALTER TABLE `hibernate_sequence` DISABLE KEYS */;
-INSERT INTO `hibernate_sequence` VALUES (37);
+INSERT INTO `hibernate_sequence` VALUES (44);
 /*!40000 ALTER TABLE `hibernate_sequence` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -94,8 +94,36 @@ CREATE TABLE `tbl_feedback` (
 
 LOCK TABLES `tbl_feedback` WRITE;
 /*!40000 ALTER TABLE `tbl_feedback` DISABLE KEYS */;
-INSERT INTO `tbl_feedback` VALUES (22,'Hàng giao nhanh, sản phẩm như hình, giá cả phải chăng.','07/01/2021',5,4,5);
+INSERT INTO `tbl_feedback` VALUES (22,'Hàng giao nhanh, sản phẩm như hình, giá cả phải chăng.','07/01/2021',5,4,5),(41,'Hàng giao nhanh, sản phẩm như hình, giá cả phải chăng.','10/01/2021',5,36,5);
 /*!40000 ALTER TABLE `tbl_feedback` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_post_tag`
+--
+
+DROP TABLE IF EXISTS `tbl_post_tag`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_post_tag` (
+  `post_tag_id` bigint(20) NOT NULL,
+  `news_id` bigint(20) NOT NULL,
+  `tag_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`post_tag_id`),
+  KEY `FKciied6w05bjb47nbhhds85uy7` (`news_id`),
+  KEY `FKjisai2nj2vd5k6ndr81i3m6vo` (`tag_id`),
+  CONSTRAINT `FKciied6w05bjb47nbhhds85uy7` FOREIGN KEY (`news_id`) REFERENCES `tblnews` (`news_id`),
+  CONSTRAINT `FKjisai2nj2vd5k6ndr81i3m6vo` FOREIGN KEY (`tag_id`) REFERENCES `tbl_tag` (`tag_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_post_tag`
+--
+
+LOCK TABLES `tbl_post_tag` WRITE;
+/*!40000 ALTER TABLE `tbl_post_tag` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_post_tag` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -193,7 +221,7 @@ CREATE TABLE `tblcart` (
   `user_id` bigint(20) NOT NULL,
   PRIMARY KEY (`cart_id`),
   KEY `FKsf9gb2qbi5tylroo1jvf3disq` (`user_id`),
-  CONSTRAINT `FKsf9gb2qbi5tylroo1jvf3disq` FOREIGN KEY (`user_id`) REFERENCES `tblusers` (`user_id`)
+  CONSTRAINT `FKsf9gb2qbi5tylroo1jvf3disq` FOREIGN KEY (`user_id`) REFERENCES `tblusers` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -203,7 +231,7 @@ CREATE TABLE `tblcart` (
 
 LOCK TABLES `tblcart` WRITE;
 /*!40000 ALTER TABLE `tblcart` DISABLE KEYS */;
-INSERT INTO `tblcart` VALUES (2,0,1),(6,0,5);
+INSERT INTO `tblcart` VALUES (6,237000,5),(43,0,42);
 /*!40000 ALTER TABLE `tblcart` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -325,7 +353,7 @@ CREATE TABLE `tblorder` (
 
 LOCK TABLES `tblorder` WRITE;
 /*!40000 ALTER TABLE `tblorder` DISABLE KEYS */;
-INSERT INTO `tblorder` VALUES (16,'J&T','note',1000000,'processing',1610031211687,1000000,14,5,NULL),(19,'J&T','note',800000,'finished',1610031363455,1000000,14,5,18),(34,'Giao hàng tiết kiệm','Giao trong giờ hành chính ',79000,'processing',1610063861259,79000,14,5,NULL);
+INSERT INTO `tblorder` VALUES (16,'J&T','note',1000000,'processing',1610031211687,1000000,14,5,NULL),(19,'J&T','note',800000,'finished',1610031363455,1000000,14,5,18),(34,'Giao hàng tiết kiệm','Giao trong giờ hành chính ',79000,'processing',1610063861259,79000,14,5,NULL),(38,'J&T','note',316000,'finished',1610150003104,316000,14,5,NULL);
 /*!40000 ALTER TABLE `tblorder` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -356,7 +384,7 @@ CREATE TABLE `tblorder_line` (
 
 LOCK TABLES `tblorder_line` WRITE;
 /*!40000 ALTER TABLE `tblorder_line` DISABLE KEYS */;
-INSERT INTO `tblorder_line` VALUES (17,4,1000000,16,4),(20,4,1000000,19,4),(35,1,79000,34,28);
+INSERT INTO `tblorder_line` VALUES (17,4,1000000,16,4),(20,4,1000000,19,4),(35,1,79000,34,28),(39,4,316000,38,36);
 /*!40000 ALTER TABLE `tblorder_line` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -422,7 +450,7 @@ CREATE TABLE `tblusers` (
 
 LOCK TABLES `tblusers` WRITE;
 /*!40000 ALTER TABLE `tblusers` DISABLE KEYS */;
-INSERT INTO `tblusers` VALUES (1,'avatardefault.png','young4everbts@gmail.com',_binary '','Nguyễn Thu Huyền',1610024181795,'$2a$10$.qi3n8MgN2JCE6Zwew3yF.9L6MUSte2galpmdlVLrmzF2P/SiSm92','30380598402','admin','huyenngtn'),(5,'avatardefault.png','young4everbts@gmail.com',_binary '','Nguyễn Ngọc Hưng',1610024857965,'$2a$10$XbDZU5xXBQPsY/y9x6Fgeubd4zVWYdPryL4Iuz6NyK.6AttqLslQC','30380598402','user','hungnne');
+INSERT INTO `tblusers` VALUES (5,'avatardefault.png','young4everbts@gmail.com',_binary '','Nguyễn Ngọc Hưng',1610024857965,'$2a$10$XbDZU5xXBQPsY/y9x6Fgeubd4zVWYdPryL4Iuz6NyK.6AttqLslQC','30380598402','user','hungnne'),(42,'avatardefault.png','thuhuyen251998@gmail.com',_binary '','Nguyễn Thu Huyền',1610246641552,'$2a$10$jqKetnWOuwcZy8rFZxY9lucuId4DErQ6p/qU6x1uHsAgnz/qwUBf6','30380598402','admin','huyenngtn');
 /*!40000 ALTER TABLE `tblusers` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -435,4 +463,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-01-09  6:19:05
+-- Dump completed on 2021-01-10 10:41:46
