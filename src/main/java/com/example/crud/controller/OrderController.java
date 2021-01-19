@@ -279,28 +279,28 @@ public class OrderController {
         return new ResponseEntity(new MessageResponse().getResponse("Đăng nhập trước khi thực hiện"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
-    @PutMapping(value = "/userPage/order/{order-id}")
-    public ResponseEntity<Order> finishOrder(@PathVariable(name = "order-id") long orderId,
-                                             HttpServletRequest request){
-        if(jwtService.isCustomer(request)){
-            long userId= jwtService.getCurrentUser(request).getUserId();
-            try{
-                Order order= orderService.findById(orderId);
-                User user= order.getUser();
-                if(userId != user.getUserId() || !order.getStatus().equals(InputParam.SHIPPING) ){
-                    return new ResponseEntity(new MessageResponse().getResponse("Bạn không thể kế thúc đơn hàng này."), HttpStatus.METHOD_NOT_ALLOWED);
-                }
-                order.setStatus(InputParam.FINISHED);
-                orderService.save(order);
-                return new ResponseEntity(new MessageResponse().getResponse("Cảm ơn bạn đã xác nhận đơn hàng."),HttpStatus.OK);
-            }
-            catch (Exception e){
-                logger.error("Order is not exist");
-                return new ResponseEntity(new MessageResponse().getResponse("Không thể kết thúc đơn hàng."),HttpStatus.BAD_REQUEST);
-            }
-        }
-        return new ResponseEntity(new MessageResponse().getResponse("Đăng nhập trước khi thực hiện"), HttpStatus.METHOD_NOT_ALLOWED);
-    }
+//    @PutMapping(value = "/userPage/order/{order-id}")
+//    public ResponseEntity<Order> finishOrder(@PathVariable(name = "order-id") long orderId,
+//                                             HttpServletRequest request){
+//        if(jwtService.isCustomer(request)){
+//            long userId= jwtService.getCurrentUser(request).getUserId();
+//            try{
+//                Order order= orderService.findById(orderId);
+//                User user= order.getUser();
+//                if(userId != user.getUserId() || !order.getStatus().equals(InputParam.SHIPPING) ){
+//                    return new ResponseEntity(new MessageResponse().getResponse("Bạn không thể kế thúc đơn hàng này."), HttpStatus.METHOD_NOT_ALLOWED);
+//                }
+//                order.setStatus(InputParam.FINISHED);
+//                orderService.save(order);
+//                return new ResponseEntity(new MessageResponse().getResponse("Cảm ơn bạn đã xác nhận đơn hàng."),HttpStatus.OK);
+//            }
+//            catch (Exception e){
+//                logger.error("Order is not exist");
+//                return new ResponseEntity(new MessageResponse().getResponse("Không thể kết thúc đơn hàng."),HttpStatus.BAD_REQUEST);
+//            }
+//        }
+//        return new ResponseEntity(new MessageResponse().getResponse("Đăng nhập trước khi thực hiện"), HttpStatus.METHOD_NOT_ALLOWED);
+//    }
 
     //----------------------------ADMIN-----------------------------------------
 
@@ -377,32 +377,64 @@ public class OrderController {
 
     //phê duyệt các đơn đang chờ xử lý <input là list các đơn>
     @PutMapping(value = "/adminPage/orders/{order-id}")
-    public ResponseEntity<Order> approvalOrder(@PathVariable(name = "order-id") long orderId,
-                                               HttpServletRequest request) {
+    public ResponseEntity<Order> updateStatusOrder(@PathVariable(name = "order-id") long orderId,
+                                                   @RequestBody String data,
+                                                   HttpServletRequest request) {
         if(jwtService.isAdmin(request)){
             try{
                 Order order= orderService.findById(orderId);
-                if(order.getStatus().equals(InputParam.PROCESSING)){
-                    User user= order.getUser();
-                    if(user == null){
-                        logger.error("Người dùng không tồn tại");
-                        userService.delete(user);
+                if (order== null) return new ResponseEntity(new MessageResponse().getResponse("Đơn hàng không tồn tại!"), HttpStatus.BAD_REQUEST);
+                String updateStatus= (String) new JSONObject(data).get(InputParam.STATUS);
+//                if(order.getStatus().equals(InputParam.PROCESSING )|| order.getStatus().equals(InputParam.SHIPPING)){
+//                    User user= order.getUser();
+//                    if(user == null  || !user.isEnable()) {
+//                        logger.error("Người dùng không tồn tại");
+//                       // userService.delete(user);
+//                        orderService.remove(order);
+//                    }
+//                    order.setStatus(InputParam.SHIPPING);
+//                    orderService.save(order);
+//
+//                    // send email notification
+//                    Calendar calendar= Calendar.getInstance();
+//                    calendar.add(Calendar.DAY_OF_YEAR, 7);
+//                    Date date1= calendar.getTime();
+//                    String dateStr= new SimpleDateFormat("dd/MM/yyyy").format(date1);
+//                    String message= "Đơn hàng có mã "+ order.getOrderId()+ " của bạn đã được giao cho shipper. Đơn sẽ được giao muộn nhất vào ngày " + dateStr+". Hãy để ý điện thoại.";
+//                    emailService.notifyOrder(message, user.getEmail());
+//                    return new ResponseEntity<>(HttpStatus.OK);
+//                }
+//                else {
+//                    return new ResponseEntity(new MessageResponse().getResponse("Bạn không thể thực hiện hành động này."), HttpStatus.METHOD_NOT_ALLOWED);
+//                }
+                if (!updateStatus.equals(InputParam.SHIPPING) &&!updateStatus.equals(InputParam.CANCEL) && !updateStatus.equals(InputParam.FINISHED)){
+                    return new ResponseEntity(new MessageResponse().getResponse("Không thể cập nhật trạng thái này."), HttpStatus.BAD_REQUEST);
+                }
+                String status= order.getStatus();
+                switch (status){
+                    case InputParam.PROCESSING: {
+                        if (!updateStatus.equals(InputParam.SHIPPING) && !updateStatus.equals(InputParam.CANCEL) && !updateStatus.equals(InputParam.FINISHED)) {
+                            return new ResponseEntity(new MessageResponse().getResponse("Không thể cập nhật đơn hàng."), HttpStatus.BAD_REQUEST);
+                        }
+                        break;
                     }
-                    order.setStatus(InputParam.SHIPPING);
-                    orderService.save(order);
-
-                    // send email notification
-                    Calendar calendar= Calendar.getInstance();
-                    calendar.add(Calendar.DAY_OF_YEAR, 7);
-                    Date date1= calendar.getTime();
-                    String dateStr= new SimpleDateFormat("dd/MM/yyyy").format(date1);
-                    String message= "Đơn hàng có mã "+ order.getOrderId()+ " của bạn đã được giao cho shipper. Đơn sẽ được giao muộn nhất vào ngày " + dateStr+". Hãy để ý điện thoại.";
-                    emailService.notifyOrder(message, user.getEmail());
-                    return new ResponseEntity<>(HttpStatus.OK);
+                    case InputParam.SHIPPING:{
+                        if (!updateStatus.equals(InputParam.FINISHED) && updateStatus.equals(InputParam.CANCEL)) {
+                            return new ResponseEntity(new MessageResponse().getResponse("Không thể cập nhật đơn hàng."), HttpStatus.BAD_REQUEST);
+                        }
+                        break;
+                        }
+                    case InputParam.FINISHED:{
+                        return new ResponseEntity(new MessageResponse().getResponse("Đơn hàng đã kết thúc, bạn không thể cập nhật."), HttpStatus.BAD_REQUEST);
+                    }
+                    case InputParam.CANCEL:{
+                        return new ResponseEntity(new MessageResponse().getResponse("Đơn hàng đã bị hủy, bạn khôn thể cập nhật."), HttpStatus.BAD_REQUEST);
+                    }
+                    default: return new ResponseEntity(new MessageResponse().getResponse("Không thể cập nhật đơn hàng."), HttpStatus.BAD_REQUEST);
                 }
-                else {
-                    return new ResponseEntity(new MessageResponse().getResponse("Bạn không thể thực hiện hành động này."), HttpStatus.METHOD_NOT_ALLOWED);
-                }
+                order.setStatus(updateStatus);
+                orderService.save(order);
+                return new ResponseEntity(new MessageResponse().getResponse("Cập nhật đơn hàng thành công."), HttpStatus.OK);
             }
             catch (Exception e){
                 return new ResponseEntity(new MessageResponse().getResponse("Đơn hàng không tồn tại."), HttpStatus.BAD_REQUEST);
