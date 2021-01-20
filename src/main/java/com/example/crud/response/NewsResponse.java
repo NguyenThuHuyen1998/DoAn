@@ -1,5 +1,7 @@
 package com.example.crud.response;
 
+import com.example.crud.entity.News;
+
 import java.util.List;
 
 public class NewsResponse {
@@ -13,6 +15,16 @@ public class NewsResponse {
 
     public NewsResponse(){
 
+    }
+
+    public NewsResponse(News news, List<String> tags){
+        this.newsId= news.getNewsId();
+        this.cover= news.getCover();
+        this.content= news.getContent();
+        this.title= news.getTitle();
+        this.userName= news.getUser().getUserName();
+        this.datePost= news.getDate();
+        this.tags= tags;
     }
 
     public NewsResponse(long newsId, String title, String content, String datePost, String cover, String userName, List<String> tags) {

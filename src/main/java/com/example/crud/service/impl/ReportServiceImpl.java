@@ -24,12 +24,13 @@ import java.util.stream.LongStream;
 
 @Service
 public class ReportServiceImpl implements ReportService {
-    private OrderRepository orderRepository;
+    private static OrderRepository orderRepository;
     private OrderLineRepository orderLineRepository;
     private ProductRepository productRepository;
-    private Map<String, Object> reportRevenue;
+    private Map<String, Double> reportEachDay;
 //    private Map<String, Object> reportProduct;
 //    private ReportProduct reportProduct;
+
     private Map<String, Object> report;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     TimeHelper timeHelper= new TimeHelper();
@@ -40,6 +41,7 @@ public class ReportServiceImpl implements ReportService {
         this.orderLineRepository= orderLineRepository;
         this.productRepository= productRepository;
     }
+
 
     public List<Order> filterOrder(String dateStart, String dateEnd) throws ParseException {
         Predicate<Order> predicate= null;
@@ -60,6 +62,24 @@ public class ReportServiceImpl implements ReportService {
         report.put(InputParam.THIS_YEAR, getReportByYear());
         return report;
     }
+
+    @Override
+    public Map<String, Double> getReportEachDay(){
+        reportEachDay= new HashMap<>();
+        List<Order> listAll= (List<Order>) orderRepository.findAll();
+        for(Order order: listAll){
+            if (!order.getStatus().equals(InputParam.FINISHED)) continue;
+            String dateTime= order.getDateTime().split(" ")[0];
+            if (reportEachDay.containsKey(dateTime)){
+                double total= reportEachDay.get(dateTime)+ order.getTotal();
+                reportEachDay.put(dateTime, total);
+            }
+            else reportEachDay.put(dateTime, order.getTotal());
+        }
+        return reportEachDay;
+    }
+
+
 
     public ReportProduct getReportByDay() throws ParseException {
         String start= LocalDate.now().format(formatter);

@@ -422,6 +422,9 @@ public class OrderController {
                         if (!updateStatus.equals(InputParam.FINISHED) && updateStatus.equals(InputParam.CANCEL)) {
                             return new ResponseEntity(new MessageResponse().getResponse("Không thể cập nhật đơn hàng."), HttpStatus.BAD_REQUEST);
                         }
+//                        if (updateStatus.equals(InputParam.FINISHED)){
+//
+//                        }
                         break;
                         }
                     case InputParam.FINISHED:{

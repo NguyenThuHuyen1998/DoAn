@@ -1,6 +1,8 @@
 package com.example.crud.entity;
 
 
+import com.example.crud.helper.TimeHelper;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -104,6 +106,11 @@ public class Order implements Serializable {
     public void setTime(long time) {
         this.time = time;
     }
+
+    public String getDateTime(){
+        return TimeHelper.getInstance().getDate(time);
+    }
+
 
     public double getTotal() {
         return total;

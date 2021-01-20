@@ -86,5 +86,15 @@ public class TagServiceImpl implements TagService {
         return tagList;
     }
 
+    @Override
+    public List<String> getListTagnameOfNews(News news) {
+        List<Tag> tagList= getListTagOfNews(news);
+        List<String> tagNames= new ArrayList<>();
+        for (Tag tag: tagList){
+            tagNames.add(tag.getTagName());
+        }
+        return tagNames;
+    }
+
 
 }

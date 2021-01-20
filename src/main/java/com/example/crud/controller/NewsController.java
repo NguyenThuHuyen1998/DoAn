@@ -138,4 +138,17 @@ public class NewsController {
         }
         return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải admin"), HttpStatus.METHOD_NOT_ALLOWED);
     }
+
+    @GetMapping(value = "/news/{news-id}")
+    public ResponseEntity<NewsResponse> getDetailNews(@PathVariable("news-id") long newsId){
+        News news= newsService.getNewsById(newsId);
+        if (news== null){
+            return new ResponseEntity(new MessageResponse().getResponse("Tin tức không tồn tại!"), HttpStatus.BAD_REQUEST);
+        }
+        else {
+            List<String> tagsName= tagService.getListTagnameOfNews(news);
+            NewsResponse newsResponse= new NewsResponse(news, tagsName);
+            return new ResponseEntity<>(newsResponse, HttpStatus.OK);
+        }
+    }
 }

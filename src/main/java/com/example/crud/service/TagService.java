@@ -14,4 +14,5 @@ public interface TagService {
     void savePostTag(PostTag postTag);
     List<PostTag> getListPostTag();
     List<Tag> getListTagOfNews(News news);
+    List<String> getListTagnameOfNews(News news);
 }

@@ -40,8 +40,9 @@ public class TimeHelper {
 
     public String getDate(long timestamp){
         Date date= new Date(timestamp);
-        return simpleDateFormat.format(date);
+        return dateFormat.format(date);
     }
+
 
 
     public String getFirstDayInWeek(){
