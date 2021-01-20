@@ -33,7 +33,7 @@ CREATE TABLE `hibernate_sequence` (
 
 LOCK TABLES `hibernate_sequence` WRITE;
 /*!40000 ALTER TABLE `hibernate_sequence` DISABLE KEYS */;
-INSERT INTO `hibernate_sequence` VALUES (134);
+INSERT INTO `hibernate_sequence` VALUES (139);
 /*!40000 ALTER TABLE `hibernate_sequence` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -124,7 +124,7 @@ CREATE TABLE `tbl_post_tag` (
 
 LOCK TABLES `tbl_post_tag` WRITE;
 /*!40000 ALTER TABLE `tbl_post_tag` DISABLE KEYS */;
-INSERT INTO `tbl_post_tag` VALUES (63,62,46),(64,62,45);
+INSERT INTO `tbl_post_tag` VALUES (63,62,46),(64,62,45),(137,136,46),(138,136,61);
 /*!40000 ALTER TABLE `tbl_post_tag` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -207,7 +207,7 @@ CREATE TABLE `tbl_vouchers` (
 
 LOCK TABLES `tbl_vouchers` WRITE;
 /*!40000 ALTER TABLE `tbl_vouchers` DISABLE KEYS */;
-INSERT INTO `tbl_vouchers` VALUES (18,'TET2020','09/01/2021','20/12/2020',200000,'VALUE',200000);
+INSERT INTO `tbl_vouchers` VALUES (18,'TET2021','20/01/2021','20/12/2020',200000,'value',200000),(134,'CMNM2021','20/01/2021','19/01/2021',500000,'percent',20),(135,'code','21/01/2021','19/01/2021',1000000,'value',500000);
 /*!40000 ALTER TABLE `tbl_vouchers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -320,7 +320,7 @@ CREATE TABLE `tblnews` (
 
 LOCK TABLES `tblnews` WRITE;
 /*!40000 ALTER TABLE `tblnews` DISABLE KEYS */;
-INSERT INTO `tblnews` VALUES (62,'content',1610279243228,'title',42,'10012021184713.png');
+INSERT INTO `tblnews` VALUES (62,'content',1610279243228,'title',42,'10012021184713.png'),(136,'<p>Thứ ba, bố cục trình bày phải đầy đủ ít nhất 3 phần:<br>– Phần 1: Đặt vấn đề và cơ sở giải quyết: thường là nội dung chương 1 + 2 trong bài outlinne, phần này chỉ nên chiếm tối đa 1/3 số slide của bạn<br>– Phần 2: Phần bạn giải quyết vấn đề thế nào: thường tương ứng nội dung chương 3 như trong bài outline, phần này chiếm hầu hết nội dung còn lại bạn phải trình bày<br>– Phần 3: Kết luận: nêu những việc làm được, những việc chưa làm được, và hướng giải quyết.<br>Rất nhiều bạn lan man ở phần 1 quá nhiều, thậm chí quá nửa số slide. Vì các bạn nghĩ nên trình bày rõ hiểu biết của mình về các vấn đề cơ sở như thuật toán, mô hình, framework,… để thể hiện với Hội đồng. Đấy là sai lầm lớn!<br>Các bạn nên nhớ là mấy kiến thức cơ sở đó chỉ mới đối với bản thân các bạn, nên các bạn cảm thấy hay và muốn thể hiện, chứ thực ra nó luôn quá cũ và quen thuộc với các thầy cô trong Hội đồng hết rồi nên ngồi nghe lại mấy cái đó rất chán. Cho nên Hội đồng chỉ hào hứng và tập trung vào cái phần các bạn LÀM được, nghĩa là phần 2, chứ không ai chú đến cái phần các bạn HIỂU được ở phần 1!<br><br>Thứ tư, nên hạn chế dùng các hiệu ứng animation và nền slide quá lòe loẹt. Trừ khi bạn đang thuyết trình về làm thế nào để có bài thuyết trình sinh động, hay bạn đang thể hiện khả năng sử dụng tin học văn phòng với power point. Còn khi bạn đang báo cáo, bảo vệ đồ án thì nên tập trung vào nội dung khoa học của đề tài. Chỉ nên dùng hiệu ứng ở một vài điểm hạn chế mà bạn cho là quan trọng. Và chỉ nên dùng hiệu ứng như đổi màu chữ, hay phóng to chứ, hoặc minh họa bằng hình ảnh thôi.</p>',1611074746135,'test blog 2',42,'19012021234546.png');
 /*!40000 ALTER TABLE `tblnews` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -358,7 +358,7 @@ CREATE TABLE `tblorder` (
 
 LOCK TABLES `tblorder` WRITE;
 /*!40000 ALTER TABLE `tblorder` DISABLE KEYS */;
-INSERT INTO `tblorder` VALUES (16,'J&T','note',1000000,'processing',1610031211687,1000000,14,5,NULL),(19,'J&T','note',800000,'finished',1610031363455,1000000,14,5,18),(34,'Giao hàng tiết kiệm','Giao trong giờ hành chính ',79000,'processing',1610063861259,79000,14,5,NULL),(38,'J&T','note',316000,'finished',1610150003104,316000,14,5,NULL);
+INSERT INTO `tblorder` VALUES (16,'J&T','note',1000000,'finished',1610031211687,1000000,14,5,NULL),(19,'J&T','note',800000,'finished',1610031363455,1000000,14,5,18),(34,'Giao hàng tiết kiệm','Giao trong giờ hành chính ',79000,'processing',1610063861259,79000,14,5,NULL),(38,'J&T','note',316000,'finished',1610150003104,316000,14,5,NULL);
 /*!40000 ALTER TABLE `tblorder` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -455,7 +455,7 @@ CREATE TABLE `tblusers` (
 
 LOCK TABLES `tblusers` WRITE;
 /*!40000 ALTER TABLE `tblusers` DISABLE KEYS */;
-INSERT INTO `tblusers` VALUES (5,'avatardefault.png','young4everbts@gmail.com',_binary '','Nguyễn Ngọc Hưng',1610024857965,'$2a$10$XbDZU5xXBQPsY/y9x6Fgeubd4zVWYdPryL4Iuz6NyK.6AttqLslQC','30380598402','user','hungnne'),(42,'avatardefault.png','thuhuyen251998@gmail.com',_binary '','Nguyễn Thu Huyền',1610246641552,'$2a$10$jqKetnWOuwcZy8rFZxY9lucuId4DErQ6p/qU6x1uHsAgnz/qwUBf6','30380598402','admin','huyenngtn');
+INSERT INTO `tblusers` VALUES (5,'20012021134014.jpg','young4everbts@gmail.com',_binary '','Nguyễn Ngọc Hưng',1610024857965,'$2a$10$XbDZU5xXBQPsY/y9x6Fgeubd4zVWYdPryL4Iuz6NyK.6AttqLslQC','30380598402','user','hungnne'),(42,'avatardefault.png','thuhuyen251998@gmail.com',_binary '','Nguyễn Thu Huyền',1610246641552,'$2a$10$jqKetnWOuwcZy8rFZxY9lucuId4DErQ6p/qU6x1uHsAgnz/qwUBf6','30380598402','admin','huyenngtn');
 /*!40000 ALTER TABLE `tblusers` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -468,4 +468,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-01-19 19:53:00
+-- Dump completed on 2021-01-20 17:57:36
