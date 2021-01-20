@@ -29,21 +29,21 @@ public class ReportController {
         this.jwtService = jwtService;
     }
 
-    @GetMapping(value = "/adminPage/report")
-    public ResponseEntity<Order> reportProduct(HttpServletRequest request) {
-        if (jwtService.isAdmin(request)) {
-            try {
-                //Map<String, Object> report= reportService.getReport();
-                List<Order> orderList = orderService.findAllOrder();
-
-                return new ResponseEntity(orderList, HttpStatus.OK);
-            } catch (Exception e) {
-                return new ResponseEntity(new MessageResponse().getResponse("Không thể xem báo cáo thống kê."), HttpStatus.BAD_REQUEST);
-            }
-        }
-
-        return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải là admin"), HttpStatus.METHOD_NOT_ALLOWED);
-    }
+//    @GetMapping(value = "/adminPage/report")
+//    public ResponseEntity<Order> reportProduct(HttpServletRequest request) {
+//        if (jwtService.isAdmin(request)) {
+//            try {
+//                //Map<String, Object> report= reportService.getReport();
+//                List<Order> orderList = orderService.findAllOrder();
+//
+//                return new ResponseEntity(orderList, HttpStatus.OK);
+//            } catch (Exception e) {
+//                return new ResponseEntity(new MessageResponse().getResponse("Không thể xem báo cáo thống kê."), HttpStatus.BAD_REQUEST);
+//            }
+//        }
+//
+//        return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải là admin"), HttpStatus.METHOD_NOT_ALLOWED);
+//    }
 
     @GetMapping(value = "/adminPage/reportTime")
     public ResponseEntity<Order> reportProductByTime(HttpServletRequest request) {
@@ -62,8 +62,8 @@ public class ReportController {
         return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải là admin"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
-    @GetMapping(value = "test")
-    public ResponseEntity<String> test() {
+    @GetMapping(value = "adminPage/report")
+    public ResponseEntity<String> getReportByDay() {
        Map<String, Double> report= reportService.getReportEachDay();
        if (report!= null){
            return new ResponseEntity(report, HttpStatus.OK);
