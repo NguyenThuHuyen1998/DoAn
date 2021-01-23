@@ -55,8 +55,7 @@ public class SendEmailServiceImpl implements SendEmailService {
     }
 
     @Override
-    public boolean notifyOrder(String message, String emailCustomer) {
-        String subject= "Đơn đang vận chuyển";
+    public boolean notifyOrder(String subject, String message, String emailCustomer) {
         return sendMail(subject, message, emailAdmin, passEmailAdmin, emailCustomer);
     }
 

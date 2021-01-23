@@ -64,8 +64,25 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public void deletePostTag(PostTag postTag) {
+        postTagRepository.delete(postTag);
+    }
+
+    @Override
     public List<PostTag> getListPostTag() {
         return (List<PostTag>) postTagRepository.findAll();
+    }
+
+    @Override
+    public List<PostTag> getListPostTag(long newsId) {
+        List<PostTag> postTagAll= (List<PostTag>) postTagRepository.findAll();
+        List<PostTag> result= new ArrayList<>();
+        if (postTagAll!= null && postTagAll.size()>0){
+            for (PostTag postTag: postTagAll){
+                if (postTag.getNews().getNewsId()== newsId) result.add(postTag);
+            }
+        }
+        return result;
     }
 
     @Override

@@ -108,6 +108,7 @@ public class NewsController {
                                            @PathVariable(name = "id") long newsId,
                                            HttpServletRequest request) {
         if (jwtService.isAdmin(request)) {
+            List<String> listTagNames= new ArrayList<>();
             News news = newsService.getNewsById(newsId);
             if (news == null) {
                 return new ResponseEntity(new MessageResponse().getResponse("Tin tức không tồn tại."), HttpStatus.BAD_REQUEST);
@@ -118,7 +119,14 @@ public class NewsController {
                 news.setCover(storageService.save(cover));
             }
             newsService.saveNews(news);
-            return new ResponseEntity<>(news, HttpStatus.OK);
+            List<Tag> tagList= tagService.getListTagOfNews(news);
+            if (tagList!= null && tagList.size()>0){
+                for (Tag tag: tagList){
+                    listTagNames.add(tag.getTagName());
+                }
+            }
+            NewsResponse newsResponse= new NewsResponse(news, listTagNames);
+            return new ResponseEntity(newsResponse, HttpStatus.OK);
         }
         return new ResponseEntity(new MessageResponse().getResponse("Bạn không thể sửa bài viết này."), HttpStatus.METHOD_NOT_ALLOWED);
     }
@@ -129,6 +137,12 @@ public class NewsController {
         if (jwtService.isAdmin(request)) {
             try {
                 News news = newsService.getNewsById(newsId);
+                List<PostTag> postTagList= tagService.getListPostTag(newsId);
+                if (postTagList!= null && postTagList.size()>0){
+                    for (PostTag postTag: postTagList){
+                        tagService.deletePostTag(postTag);
+                    }
+                }
                 newsService.deleteNews(news);
                 return new ResponseEntity(new MessageResponse().getResponse("Xóa bài viết thành công!"), HttpStatus.OK);
             } catch (Exception e) {

@@ -375,7 +375,7 @@ public class OrderController {
         return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải admin"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
-    //phê duyệt các đơn đang chờ xử lý <input là list các đơn>
+    //update status order by admin
     @PutMapping(value = "/adminPage/orders/{order-id}")
     public ResponseEntity<Order> updateStatusOrder(@PathVariable(name = "order-id") long orderId,
                                                    @RequestBody String data,
@@ -385,6 +385,7 @@ public class OrderController {
                 Order order= orderService.findById(orderId);
                 if (order== null) return new ResponseEntity(new MessageResponse().getResponse("Đơn hàng không tồn tại!"), HttpStatus.BAD_REQUEST);
                 String updateStatus= (String) new JSONObject(data).get(InputParam.STATUS);
+                User user= order.getUser();
 //                if(order.getStatus().equals(InputParam.PROCESSING )|| order.getStatus().equals(InputParam.SHIPPING)){
 //                    User user= order.getUser();
 //                    if(user == null  || !user.isEnable()) {
@@ -411,32 +412,68 @@ public class OrderController {
                     return new ResponseEntity(new MessageResponse().getResponse("Không thể cập nhật trạng thái này."), HttpStatus.BAD_REQUEST);
                 }
                 String status= order.getStatus();
-                switch (status){
-                    case InputParam.PROCESSING: {
-                        if (!updateStatus.equals(InputParam.SHIPPING) && !updateStatus.equals(InputParam.CANCEL) && !updateStatus.equals(InputParam.FINISHED)) {
-                            return new ResponseEntity(new MessageResponse().getResponse("Không thể cập nhật đơn hàng."), HttpStatus.BAD_REQUEST);
-                        }
+//                switch (status){
+//                    case InputParam.PROCESSING: {
+//                        if (!updateStatus.equals(InputParam.SHIPPING) && !updateStatus.equals(InputParam.CANCEL) && !updateStatus.equals(InputParam.FINISHED)) {
+//                            return new ResponseEntity(new MessageResponse().getResponse("Không thể cập nhật đơn hàng."), HttpStatus.BAD_REQUEST);
+//                        }
+//                        break;
+//                    }
+//                    case InputParam.SHIPPING:{
+//                        if (!updateStatus.equals(InputParam.FINISHED) && updateStatus.equals(InputParam.CANCEL)) {
+//                            return new ResponseEntity(new MessageResponse().getResponse("Không thể cập nhật đơn hàng."), HttpStatus.BAD_REQUEST);
+//                        }
+////                        if (updateStatus.equals(InputParam.FINISHED)){
+////
+////                        }
+//                        break;
+//                        }
+//                    case InputParam.FINISHED:{
+//                        return new ResponseEntity(new MessageResponse().getResponse("Đơn hàng đã kết thúc, bạn không thể cập nhật."), HttpStatus.BAD_REQUEST);
+//                    }
+//                    case InputParam.CANCEL:{
+//                        return new ResponseEntity(new MessageResponse().getResponse("Đơn hàng đã bị hủy, bạn khôn thể cập nhật."), HttpStatus.BAD_REQUEST);
+//                    }
+//                    default: return new ResponseEntity(new MessageResponse().getResponse("Không thể cập nhật đơn hàng."), HttpStatus.BAD_REQUEST);
+//                }
+                switch (updateStatus){
+                    case InputParam.PROCESSING:{
                         break;
                     }
                     case InputParam.SHIPPING:{
-                        if (!updateStatus.equals(InputParam.FINISHED) && updateStatus.equals(InputParam.CANCEL)) {
-                            return new ResponseEntity(new MessageResponse().getResponse("Không thể cập nhật đơn hàng."), HttpStatus.BAD_REQUEST);
+                        if (!status.equals(InputParam.PROCESSING)) {
+                            return new ResponseEntity(new MessageResponse().getResponse("Không thể cập nhật trạng thái này."), HttpStatus.BAD_REQUEST);
                         }
-//                        if (updateStatus.equals(InputParam.FINISHED)){
-//
-//                        }
-                        break;
-                        }
+                        order.setStatus(updateStatus);
+                        orderService.save(order);
+                        String subject= "Đơn đang vận chuyển.";
+                        String message= "Đơn hàng có mã #"+ order.getOrderId()+" đang được vận chuyển.";
+                        emailService.notifyOrder(subject, message, user.getEmail());
+                        return new ResponseEntity(new MessageResponse().getResponse("Đơn hàng đang được vận chuyển."), HttpStatus.OK);
+                    }
                     case InputParam.FINISHED:{
-                        return new ResponseEntity(new MessageResponse().getResponse("Đơn hàng đã kết thúc, bạn không thể cập nhật."), HttpStatus.BAD_REQUEST);
+                        if (!status.equals(InputParam.SHIPPING)){
+                            return new ResponseEntity(new MessageResponse().getResponse("Không thể cập nhật trạng thái này."), HttpStatus.BAD_REQUEST);
+                        }
+                        order.setStatus(updateStatus);
+                        orderService.save(order);
+                        String subject= "Đơn đã hoàn thành.";
+                        String message= "Đơn hàng có mã #"+ order.getOrderId()+" đã được người giao hàng xác nhận đã giao. Nếu bạn vẫn chưa nhận được sản phẩm, hãy liên hệ với chúng tôi.";
+                        emailService.notifyOrder(subject, message, user.getEmail());
+                        return new ResponseEntity(new MessageResponse().getResponse("Đơn hàng đã hoàn thành."), HttpStatus.OK);
                     }
                     case InputParam.CANCEL:{
-                        return new ResponseEntity(new MessageResponse().getResponse("Đơn hàng đã bị hủy, bạn khôn thể cập nhật."), HttpStatus.BAD_REQUEST);
+                        if (!status.equals(InputParam.PROCESSING) && !status.equals(InputParam.SHIPPING)){
+                            return new ResponseEntity(new MessageResponse().getResponse("Không thể hủy đơn hàng này."), HttpStatus.BAD_REQUEST);
+                        }
+                        order.setStatus(updateStatus);
+                        orderService.save(order);
+                        String subject= "Đơn đã hủy.";
+                        String message= "Đơn hàng có mã #"+ order.getOrderId()+" đã bị hủy.";
+                        emailService.notifyOrder(subject, message, user.getEmail());
+                        return new ResponseEntity(new MessageResponse().getResponse("Đã hủy đơn hàng"), HttpStatus.OK);
                     }
-                    default: return new ResponseEntity(new MessageResponse().getResponse("Không thể cập nhật đơn hàng."), HttpStatus.BAD_REQUEST);
                 }
-                order.setStatus(updateStatus);
-                orderService.save(order);
                 return new ResponseEntity(new MessageResponse().getResponse("Cập nhật đơn hàng thành công."), HttpStatus.OK);
             }
             catch (Exception e){

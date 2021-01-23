@@ -12,7 +12,9 @@ public interface TagService {
     List<Tag> getListTags();
     Tag getTagByName(String tagName);
     void savePostTag(PostTag postTag);
+    void deletePostTag(PostTag postTag);
     List<PostTag> getListPostTag();
+    List<PostTag> getListPostTag(long newsId);
     List<Tag> getListTagOfNews(News news);
     List<String> getListTagnameOfNews(News news);
 }
