@@ -26,6 +26,7 @@ public class OrderResponse implements Serializable {
     private double realPay;
     private double voucher;
     private Address address;
+    private String note;
     private List<OrderLineForm> orderLineList;
 
     public OrderResponse(){
@@ -38,6 +39,7 @@ public class OrderResponse implements Serializable {
         this.status= order.getStatus();
         this.total= order.getTotal();
         this.address= order.getAddress();
+        this.note= order.getNote();
         this.time= TimeHelper.getInstance().getDate(order.getTime());
         if(voucher== null){
             this.voucher= 0;
@@ -62,6 +64,7 @@ public class OrderResponse implements Serializable {
         this.status= order.getStatus();
         this.total= order.getTotal();
         this.address= order.getAddress();
+        this.note= order.getNote();
         this.time= TimeHelper.getInstance().getDate(order.getTime());
         double counpon= 0;
         Voucher voucher= order.getVoucher();
@@ -160,5 +163,11 @@ public class OrderResponse implements Serializable {
         this.orderLineList = orderLineList;
     }
 
+    public String getNote() {
+        return note;
+    }
 
+    public void setNote(String note) {
+        this.note = note;
+    }
 }
