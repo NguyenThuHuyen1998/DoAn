@@ -12,9 +12,11 @@ public class ConfirmPassword {
     @NotEmpty(message = "*Please pro")
     private String newPassword;
 
-    public ConfirmPassword(String confirmCode, String newPassword) {
+    private String username;
+    public ConfirmPassword(String confirmCode, String newPassword, String username) {
         this.confirmCode = confirmCode;
         this.newPassword = newPassword;
+        this.username= username;
     }
 
 
@@ -32,5 +34,13 @@ public class ConfirmPassword {
 
     public void setNewPassword(String newPassword) {
         this.newPassword = newPassword;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

@@ -33,7 +33,7 @@ CREATE TABLE `hibernate_sequence` (
 
 LOCK TABLES `hibernate_sequence` WRITE;
 /*!40000 ALTER TABLE `hibernate_sequence` DISABLE KEYS */;
-INSERT INTO `hibernate_sequence` VALUES (3);
+INSERT INTO `hibernate_sequence` VALUES (14);
 /*!40000 ALTER TABLE `hibernate_sequence` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -62,7 +62,7 @@ CREATE TABLE `tbl_address` (
 
 LOCK TABLES `tbl_address` WRITE;
 /*!40000 ALTER TABLE `tbl_address` DISABLE KEYS */;
-INSERT INTO `tbl_address` VALUES (14,'123 O Cho Dua, Dong Da','Nguyen Ngoc Hung','864359340',5),(146,'132 Phùng Khoang, Nam Từ Liêm','Nguyễn Quốc Bảo','0327990997',142);
+INSERT INTO `tbl_address` VALUES (5,'132 Phùng Khoang, Nam Từ Liêm','Doãn Thị Nguyệt Thu','0327990997',1),(14,'123 O Cho Dua, Dong Da','Nguyen Ngoc Hung','864359340',5),(146,'132 Phùng Khoang, Nam Từ Liêm','Nguyễn Quốc Bảo','0327990997',142);
 /*!40000 ALTER TABLE `tbl_address` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -177,7 +177,7 @@ CREATE TABLE `tbl_user_voucher` (
 
 LOCK TABLES `tbl_user_voucher` WRITE;
 /*!40000 ALTER TABLE `tbl_user_voucher` DISABLE KEYS */;
-INSERT INTO `tbl_user_voucher` VALUES (21,5,18),(150,142,135);
+INSERT INTO `tbl_user_voucher` VALUES (9,1,18),(13,1,18),(21,5,18),(150,142,135);
 /*!40000 ALTER TABLE `tbl_user_voucher` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -207,7 +207,7 @@ CREATE TABLE `tbl_vouchers` (
 
 LOCK TABLES `tbl_vouchers` WRITE;
 /*!40000 ALTER TABLE `tbl_vouchers` DISABLE KEYS */;
-INSERT INTO `tbl_vouchers` VALUES (18,'TET2021','20/01/2021','20/12/2020',200000,'value',200000),(134,'CMNM2021','20/01/2021','19/01/2021',500000,'percent',20),(135,'code','21/01/2021','19/01/2021',1000000,'value',500000);
+INSERT INTO `tbl_vouchers` VALUES (18,'TET2021','26/01/2021','20/12/2020',200000,'value',200000),(134,'CMNM2021','20/01/2021','19/01/2021',500000,'percent',20),(135,'code','21/01/2021','19/01/2021',1000000,'value',500000);
 /*!40000 ALTER TABLE `tbl_vouchers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -265,7 +265,7 @@ CREATE TABLE `tblcart_items` (
 
 LOCK TABLES `tblcart_items` WRITE;
 /*!40000 ALTER TABLE `tblcart_items` DISABLE KEYS */;
-INSERT INTO `tblcart_items` VALUES (133,1,6,129,950000),(151,1,143,131,480000);
+INSERT INTO `tblcart_items` VALUES (10,1,2,131,480000),(133,1,6,129,950000),(151,1,143,131,480000);
 /*!40000 ALTER TABLE `tblcart_items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -358,7 +358,7 @@ CREATE TABLE `tblorder` (
 
 LOCK TABLES `tblorder` WRITE;
 /*!40000 ALTER TABLE `tblorder` DISABLE KEYS */;
-INSERT INTO `tblorder` VALUES (139,'Giao hàng tiết kiệm','Giao hàng trong giờ hàng chính.',1330000,'finished',1611159979295,1330000,14,5,NULL),(147,'Giao hàng tiết kiệm','Giao hàng trong giờ hàng chính.',1320000,'finished',1611164899580,1820000,146,142,135),(152,'Giao hàng tiết kiệm','Giao hàng trong giờ hàng chính.',2080000,'finished',1611333794901,2080000,146,142,NULL);
+INSERT INTO `tblorder` VALUES (6,'Giao hàng tiết kiệm','Giao hàng trong giờ hàng chính.',850000,'finished',1611337123604,1050000,5,1,18),(11,'Giao hàng tiết kiệm','Giao hàng trong giờ hàng chính.',280000,'cancel',1611337123604,480000,5,1,18),(139,'Giao hàng tiết kiệm','Giao hàng trong giờ hàng chính.',1330000,'finished',1611159979295,1330000,14,5,NULL),(147,'Giao hàng tiết kiệm','Giao hàng trong giờ hàng chính.',1320000,'finished',1611164899580,1820000,146,142,135),(152,'Giao hàng tiết kiệm','Giao hàng trong giờ hàng chính.',2080000,'finished',1611333794901,2080000,146,142,NULL);
 /*!40000 ALTER TABLE `tblorder` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -389,7 +389,7 @@ CREATE TABLE `tblorder_line` (
 
 LOCK TABLES `tblorder_line` WRITE;
 /*!40000 ALTER TABLE `tblorder_line` DISABLE KEYS */;
-INSERT INTO `tblorder_line` VALUES (140,1,950000,139,129),(141,1,380000,139,130),(148,1,1600000,147,110),(149,1,220000,147,124),(153,1,1600000,152,110),(154,1,480000,152,131);
+INSERT INTO `tblorder_line` VALUES (7,1,770000,6,121),(8,1,280000,6,122),(12,1,480000,11,131),(140,1,950000,139,129),(141,1,380000,139,130),(148,1,1600000,147,110),(149,1,220000,147,124),(153,1,1600000,152,110),(154,1,480000,152,131);
 /*!40000 ALTER TABLE `tblorder_line` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -455,7 +455,7 @@ CREATE TABLE `tblusers` (
 
 LOCK TABLES `tblusers` WRITE;
 /*!40000 ALTER TABLE `tblusers` DISABLE KEYS */;
-INSERT INTO `tblusers` VALUES (1,'avatardefault.png','huyen251998@gmail.com',_binary '','Doãn Thị Nguyệt Thu',1611363586802,'$2a$10$z/rDT6VSj7jqLv1O5oF0j.8cp3x5dDOm6IqYQ9AiLk6JAXz49Zix2','0327990997','user','ThuDTN'),(5,'20012021134014.jpg','young4everbts@gmail.com',_binary '','Nguyễn Ngọc Hưng',1611159979510,'$2a$10$XbDZU5xXBQPsY/y9x6Fgeubd4zVWYdPryL4Iuz6NyK.6AttqLslQC','30380598402','user','hungnne'),(42,'avatardefault.png','thuhuyen251998@gmail.com',_binary '','Nguyễn Thu Huyền',1610246641552,'$2a$10$jqKetnWOuwcZy8rFZxY9lucuId4DErQ6p/qU6x1uHsAgnz/qwUBf6','30380598402','admin','huyenngtn'),(142,'21012021012508.jpg','huyen251998@gmail.com',_binary '','Nguyễn Quốc Bảo',1611333795172,'$2a$10$pSsWZapwoMW3MwsNPIiWn.C7XF5qd0jRARhB0XW7/gwt3If28lKn2','0327990997','user','baonq');
+INSERT INTO `tblusers` VALUES (1,'avatardefault.png','huyen251998@gmail.com',_binary '','Doãn Thị Nguyệt Thu',1611367123725,'$2a$10$dugagmWyiR36S2FpsS2rEOLhW5z4h9OYLvrD29g5byDav.sVedbHa','0327990997','user','ThuDTN'),(5,'20012021134014.jpg','young4everbts@gmail.com',_binary '','Nguyễn Ngọc Hưng',1611159979510,'$2a$10$XbDZU5xXBQPsY/y9x6Fgeubd4zVWYdPryL4Iuz6NyK.6AttqLslQC','30380598402','user','hungnne'),(42,'avatardefault.png','thuhuyen251998@gmail.com',_binary '','Nguyễn Thu Huyền',1610246641552,'$2a$10$jqKetnWOuwcZy8rFZxY9lucuId4DErQ6p/qU6x1uHsAgnz/qwUBf6','30380598402','admin','huyenngtn'),(142,'21012021012508.jpg','huyen251998@gmail.com',_binary '','Nguyễn Quốc Bảo',1611333795172,'$2a$10$pSsWZapwoMW3MwsNPIiWn.C7XF5qd0jRARhB0XW7/gwt3If28lKn2','0327990997','user','baonq');
 /*!40000 ALTER TABLE `tblusers` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -468,4 +468,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-01-23  8:34:52
+-- Dump completed on 2021-01-23 13:01:42

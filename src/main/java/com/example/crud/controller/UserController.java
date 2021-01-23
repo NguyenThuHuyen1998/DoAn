@@ -137,11 +137,11 @@ public class UserController {
     }
 
     @PostMapping(value = "/user/confirmPassword")
-    public ResponseEntity<User> confirmPassword(@RequestBody ConfirmPassword confirmPassword,
-                                                HttpServletRequest request){
-        String userName= request.getHeader(InputParam.USER_NAME);
-        String confirmCode= confirmPassword.getConfirmCode();
-        String newPassword= confirmPassword.getNewPassword();
+    public ResponseEntity<User> confirmPassword(@RequestBody String data){
+        JSONObject jsonObject= new JSONObject(data);
+        String userName= jsonObject.getString(InputParam.USER_NAME);
+        String confirmCode= jsonObject.getString("confirmCode");
+        String newPassword= jsonObject.getString("newPassword");
         User user= userService.findByName(userName);
         if(user== null){
             return new ResponseEntity(new MessageResponse().getResponse("Không tìm thấy tài khoản."), HttpStatus.BAD_REQUEST);
