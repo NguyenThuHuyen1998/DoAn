@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -63,12 +65,17 @@ public class ReportController {
     }
 
     @GetMapping(value = "adminPage/report")
-    public ResponseEntity<String> getReportByDay() {
-       Map<String, Double> report= reportService.getReportEachDay();
-       if (report!= null){
-           return new ResponseEntity(report, HttpStatus.OK);
-       }
-       else return new ResponseEntity(new MessageResponse().getResponse("Chưa có thống kê."), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<String> getReportByDay(@RequestParam(name = "dateStart", required = false, defaultValue = "-1") String dateStart,
+                                                 @RequestParam(name = "dateEnd", required = false, defaultValue = "-1") String dateEnd,
+                                                 HttpServletRequest request) throws ParseException {
+        if (jwtService.isAdmin(request)){
+            Map<String, Double> report= reportService.getReportEachDay(dateStart, dateEnd);
+            if (report!= null){
+                return new ResponseEntity(report, HttpStatus.OK);
+            }
+            else return new ResponseEntity(new MessageResponse().getResponse("Chưa có thống kê."), HttpStatus.BAD_REQUEST);
+        }
+       return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải là admin."), HttpStatus.METHOD_NOT_ALLOWED);
     }
 }
 

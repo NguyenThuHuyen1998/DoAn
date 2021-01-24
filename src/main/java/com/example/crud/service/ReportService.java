@@ -8,5 +8,5 @@ import java.util.Map;
 
 public interface ReportService {
     Map<String, Object> getReport() throws ParseException;
-    Map<String, Double> getReportEachDay();
+    Map<String, Double> getReportEachDay(String dateStart, String dateEnd) throws ParseException;
 }

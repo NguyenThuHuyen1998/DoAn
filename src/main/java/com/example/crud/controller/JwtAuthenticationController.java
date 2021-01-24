@@ -68,6 +68,11 @@ public class JwtAuthenticationController {
             return new ResponseEntity(new MessageResponse().getResponse("Đăng nhập không đúng tài khoản hoặc sai mật khẩu."), HttpStatus.BAD_REQUEST);
         }
 
+        String userName= authenticationRequest.getUsername();
+        User user= userService.findByName(userName);
+        if (!user.isEnable()){
+            return new ResponseEntity<>(new MessageResponse().getResponse("Tài khoản đã bị khóa."), HttpStatus.BAD_REQUEST);
+        }
         final UserDetails userDetails = userDetailsService
                 .loadUserByUsername(authenticationRequest.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);

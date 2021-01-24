@@ -64,10 +64,21 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public Map<String, Double> getReportEachDay(){
+    public Map<String, Double> getReportEachDay(String dateStart, String dateEnd) throws ParseException {
         reportEachDay= new HashMap<>();
         List<Order> listAll= (List<Order>) orderRepository.findAll();
-        for(Order order: listAll){
+        List<Order> listOrder= new ArrayList<>();
+        if (dateEnd.equals("-1") && dateStart.equals("-1") ){
+            listOrder= listAll;
+        }
+        if (!dateEnd.equals("-1") && !dateStart.equals("-1")){
+            Predicate<Order> predicate = null;
+            PredicateOrderFilter predicateOrderFilter = PredicateOrderFilter.getInstance();
+            Predicate<Order> checkDate = predicateOrderFilter.checkDate(dateStart, dateEnd);
+            predicate = checkDate;
+            listOrder= predicateOrderFilter.filterOrder(listAll, predicate);
+        }
+        for(Order order: listOrder){
             if (!order.getStatus().equals(InputParam.FINISHED)) continue;
             String dateTime= order.getDateTime().split(" ")[0];
             if (reportEachDay.containsKey(dateTime)){

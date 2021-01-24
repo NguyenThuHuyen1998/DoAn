@@ -301,6 +301,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public double applyVoucher(Order order, Voucher voucher) {
         double counpon= 0;
+        // check user-voucher nếu user đã sử dụng voucher thì k sử dụng được nữa.
         double value= voucher.getValueDiscount();
         if (voucher.getTypeDiscount().equals(InputParam.PERCENT)){
             counpon= value* order.getTotal()/100;

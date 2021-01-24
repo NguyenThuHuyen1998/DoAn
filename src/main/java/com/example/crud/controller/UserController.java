@@ -262,7 +262,7 @@ public class UserController {
         return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải là admin"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
-    @PutMapping(value = "/adminPage/lockUser/{id}")
+    @GetMapping(value = "/adminPage/lockUser/{id}")
     public ResponseEntity<User> lockUser(@PathVariable("id") long userId,
                                          HttpServletRequest request){
         if (jwtHandler.isAdmin(request)) {
@@ -273,6 +273,23 @@ public class UserController {
                 user.setEnable(false);
                 userService.update(user);
                 return new ResponseEntity(user, HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải là admin"), HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
+    @PostMapping(value = "/users/activate/{id}")
+    public ResponseEntity<User> activeUser(@PathVariable("id") long userId,
+                                           HttpServletRequest request){
+        if (jwtHandler.isAdmin(request)){
+            User user= userService.findById(userId);
+            if (user== null){
+                return new ResponseEntity(new MessageResponse().getResponse("Người dùng không tồn tại."), HttpStatus.BAD_REQUEST);
+            }
+            else {
+                user.setEnable(true);
+                userService.update(user);
+                return new ResponseEntity<>(user, HttpStatus.OK);
             }
         }
         return new ResponseEntity(new MessageResponse().getResponse("Bạn không phải là admin"), HttpStatus.METHOD_NOT_ALLOWED);
